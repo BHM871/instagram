@@ -5,14 +5,15 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.PermissionChecker
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.add.Add
 import co.tiagoaguiar.course.instagram.add.util.AddViewPageAdapter
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainAddBinding
+import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
-import java.security.PermissionCollection
-import java.security.Permissions
 
 class AddFragment : BaseFragment<FragmentMainAddBinding, Add.Presenter>(
     R.layout.fragment_main_add,
@@ -35,6 +36,19 @@ class AddFragment : BaseFragment<FragmentMainAddBinding, Add.Presenter>(
         viewPager?.adapter = adapter
 
         if (tabLayout != null && viewPager != null){
+            tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener{
+                override fun onTabSelected(tab: TabLayout.Tab?) {
+                    if (tab?.text == getString(adapter.tabs[0])){
+                        starCamera()
+                    }
+                }
+
+                override fun onTabUnselected(tab: TabLayout.Tab?) {
+                }
+
+                override fun onTabReselected(tab: TabLayout.Tab?) {
+                }
+            })
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
                 tab.text = getString(adapter.tabs[position])
             }.attach()
@@ -51,7 +65,7 @@ class AddFragment : BaseFragment<FragmentMainAddBinding, Add.Presenter>(
         ContextCompat.checkSelfPermission(requireContext(), REQUIRED_PERMISSIONS) == PermissionChecker.PERMISSION_GRANTED
 
     private fun starCamera(){
-        val a = "a"
+        setFragmentResult("cameraKey", bundleOf("startCamera" to true))
     }
 
     private val getPermission =
