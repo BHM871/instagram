@@ -14,7 +14,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/camera_btn_print"
+        android:id="@+id/camera_btn_capture"
         android:layout_width="98dp"
         android:layout_height="98dp"
         android:background="@drawable/button_background_circle"

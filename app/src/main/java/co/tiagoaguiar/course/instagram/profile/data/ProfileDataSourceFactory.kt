@@ -1,29 +1,31 @@
 package co.tiagoaguiar.course.instagram.profile.data
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
+import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileDataSourceFactory(
-    private val profileUserCache: Cache<UserAuth>,
-    private val profilePostCache: Cache<List<Post>>
+    private val userCache: Cache<UserAuth>,
+    private val photoCache: Cache<Photo>,
+    private val postCache: Cache<List<Post>>
 ) {
 
     fun createLocalDataSource() : ProfileLocalDataSource {
-        return ProfileLocalDataSource(profileUserCache, profilePostCache)
+        return ProfileLocalDataSource(userCache, photoCache, postCache)
     }
 
     fun createFromUser() : ProfileDataSource {
-        return if (profileUserCache.isCached()){
-            ProfileLocalDataSource(profileUserCache, profilePostCache)
+        return if (userCache.isCached()){
+            ProfileLocalDataSource(userCache, photoCache, postCache)
         } else {
             ProfileFakeDataSource()
         }
     }
 
     fun createFromPosts() : ProfileDataSource {
-        return if (profilePostCache.isCached()){
-            ProfileLocalDataSource(profileUserCache, profilePostCache)
+        return if (postCache.isCached()){
+            ProfileLocalDataSource(userCache, photoCache, postCache)
         } else {
             ProfileFakeDataSource()
         }

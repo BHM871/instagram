@@ -1,19 +1,32 @@
 package co.tiagoaguiar.course.instagram.common.view
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.TypedValue
 import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import androidx.appcompat.app.ActionBar
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.databinding.FragmentImageCroppedBinding
+import co.tiagoaguiar.course.instagram.main.view.MainActivity
+import com.google.android.material.appbar.AppBarLayout
 import java.io.File
+import java.text.AttributedCharacterIterator
+import java.util.jar.Attributes
 
 class ImageCroppedFragment : Fragment(R.layout.fragment_image_cropped) {
 
     private var binding: FragmentImageCroppedBinding? = null
+
+    private var isMainActivity = false
 
     companion object {
         const val KEY_URI = "key_uri"
@@ -23,6 +36,10 @@ class ImageCroppedFragment : Fragment(R.layout.fragment_image_cropped) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = FragmentImageCroppedBinding.bind(view)
+
+        if (isMainActivity) {
+            marginMainActivity()
+        }
 
         val uri = arguments?.getParcelable<Uri>(KEY_URI)
 
@@ -60,8 +77,32 @@ class ImageCroppedFragment : Fragment(R.layout.fragment_image_cropped) {
         }
     }
 
+    private fun marginMainActivity() {
+        val tv = TypedValue()
+        var actionBarHeight = 0;
+        if (activity?.theme?.resolveAttribute(R.attr.actionBarSize, tv, true) == true)
+            actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, resources.displayMetrics)
+
+        val layoutParams = FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            AppBarLayout.LayoutParams.MATCH_PARENT
+        )
+         actionBarHeight= resources.getResourceName(R.attr.actionBarSize).toInt()
+        layoutParams.setMargins(0, 0, 0, actionBarHeight)
+
+        binding?.containerCropped?.layoutParams = layoutParams
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is MainActivity) {
+            isMainActivity = true
+        }
+    }
+
     override fun onDestroy() {
         binding = null
+        isMainActivity = false
         super.onDestroy()
     }
 

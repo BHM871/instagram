@@ -2,6 +2,7 @@ package co.tiagoaguiar.course.instagram.register.presenter
 
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
+import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.register.RegisterPhoto
 import co.tiagoaguiar.course.instagram.register.data.RegisterRepository
 
@@ -12,8 +13,8 @@ class RegisterPhotoPresenter(
 
     override fun updateUser(photoUri: Uri) {
         view?.showProgress(true)
-        repository.updateUser(photoUri, object : RequestCallback<Any?> {
-            override fun onSuccess(data: Any?) {
+        repository.updateUser(photoUri, object : RequestCallback<Photo> {
+            override fun onSuccess(data: Photo) {
                 view?.onUpdateSuccess()
             }
 

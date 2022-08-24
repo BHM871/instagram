@@ -20,11 +20,26 @@ class ProfilePresenter(
     private val repository: ProfileRepository
 ) : Profile.Presenter {
 
-    override fun fetchUserProfile() {
+    override fun fetchUserProfile(context: Context) {
         view?.showProgress(true)
         repository.fetchUserProfile(object : RequestCallback<UserAuth> {
             override fun onSuccess(data: UserAuth) {
-                view?.displayUserProfile(data)
+                var image: Bitmap? = null
+                repository.fetchUserPhoto(object : RequestCallback<Photo?>{
+                    override fun onSuccess(data: Photo?) {
+                        if (data != Photo.EMPTY){
+                            image = uriToBitmap(context, data)
+                        }
+                    }
+
+                    override fun onFailure(message: String) {
+                        view?.displayRequestFailure(message)
+                    }
+
+                    override fun onComplete() {
+                    }
+                })
+                view?.displayUserProfile(data, image)
             }
 
             override fun onFailure(message: String) {
@@ -56,9 +71,9 @@ class ProfilePresenter(
         })
     }
 
-    override fun updateProfile(context: Context, photoUri: Uri) {
+    override fun updatePhoto(context: Context, photoUri: Uri) {
         view?.showProgress(true)
-        repository.updateProfile(photoUri, object : RequestCallback<Photo> {
+        repository.updatePhoto(photoUri, object : RequestCallback<Photo> {
             override fun onSuccess(data: Photo) {
                 val bitmap = uriToBitmap(context, data)
                 view?.onUpdateUserSuccess(bitmap ?: throw RuntimeException("Error in image"))

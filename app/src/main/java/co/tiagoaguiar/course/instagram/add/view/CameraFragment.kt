@@ -1,36 +1,32 @@
 package co.tiagoaguiar.course.instagram.add.view
 
+import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.camera.core.CameraSelector
+import androidx.camera.core.ImageCapture
+import androidx.camera.core.ImageCaptureException
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import co.tiagoaguiar.course.instagram.R
+import co.tiagoaguiar.course.instagram.common.util.Files
+import co.tiagoaguiar.course.instagram.databinding.FragmentMainAddCameraBinding
 
-class CameraFragment : Fragment() {
+class CameraFragment : Fragment(R.layout.fragment_main_add_camera) {
+
+    private var binding: FragmentMainAddCameraBinding? = null
 
     private lateinit var previewView: PreviewView
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main_add_camera, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        previewView = view.findViewById(R.id.preview_view_camera)
-    }
+    private var imgCapture: ImageCapture? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,28 +36,81 @@ class CameraFragment : Fragment() {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding = FragmentMainAddCameraBinding.bind(view)
+
+        previewView = binding?.previewViewCamera!!
+        binding?.cameraBtnCapture?.setOnClickListener {
+            blink()
+            takePhoto()
+        }
+    }
+
+    private fun blink() {
+        previewView.animate().apply {
+            duration = 75
+            alpha(0.0f)
+            start()
+        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            previewView.animate().apply {
+                duration = 75
+                alpha(1.0f)
+                start()
+            }
+        }, 75)
+    }
+
+    private fun takePhoto() {
+        val imgCapture = imgCapture ?: return
+
+        val photoFile = Files.generatedFile(requireActivity())
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+
+        imgCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
+            override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
+                val savedUri = Uri.fromFile(photoFile)
+                setFragmentResult("takeCameraKey", bundleOf("takeUri" to savedUri))
+            }
+
+            override fun onError(exception: ImageCaptureException) {
+                Log.e("CaptureError", "Failure to take photo", exception)
+            }})
+    }
+
     private fun starCamera() {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
-        val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+        cameraProviderFuture.addListener({
 
-        val preview = Preview.Builder()
-            .build()
-            .also {
-                it.setSurfaceProvider(previewView.surfaceProvider)
+            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+
+            val preview = Preview.Builder()
+                .build()
+                .also {
+                    it.setSurfaceProvider(previewView.surfaceProvider)
+                }
+            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
+            imgCapture = ImageCapture.Builder().build()
+
+            try {
+                cameraProvider.unbindAll()
+
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview, imgCapture)
+
+            } catch (e: Exception) {
+                Log.e("Test", "Failure initialize camera", e)
             }
-        val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-        try {
-            cameraProvider.unbindAll()
+        }, ContextCompat.getMainExecutor(requireContext()))
+    }
 
-            cameraProvider.bindToLifecycle(this, cameraSelector, preview)
-
-        } catch (e: Exception) {
-            Log.e("Test", "Failure initialize camera", e)
-        }
-
-        cameraProviderFuture.addListener({}, ContextCompat.getMainExecutor(requireContext()))
+    override fun onDestroy() {
+        binding = null
+        super.onDestroy()
     }
 
 }

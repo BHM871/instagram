@@ -1,9 +1,9 @@
-package co.tiagoaguiar.course.instagram.profile.data
+package co.tiagoaguiar.course.instagram.common.util
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.Post
 
-object ProfilePostsCache : Cache<List<Post>> {
+object PostsCache : Cache<List<Post>> {
 
     var posts: List<Post>? = null
 
@@ -18,5 +18,9 @@ object ProfilePostsCache : Cache<List<Post>> {
 
     override fun put(data: List<Post>) {
         posts = data
+    }
+
+    override fun remove() {
+        posts = null
     }
 }

@@ -8,9 +8,11 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
+import android.view.ViewGroup
 import android.view.WindowInsetsController
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -67,7 +69,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         var scrollToolbarEnabled = false
 
-        //V1
         when (item.itemId) {
             R.id.menu_bottom_home -> {
                 if (currentFragment == homeFragment) return false

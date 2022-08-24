@@ -6,4 +6,8 @@ import java.util.*
 data class Photo(
     val uuidUser: String,
     val photoUri: Uri
-)
+) {
+    companion object {
+        val EMPTY = Photo("", Uri.EMPTY)
+    }
+}

@@ -1,5 +1,13 @@
 package co.tiagoaguiar.course.instagram.common.base
 
+import co.tiagoaguiar.course.instagram.add.Add
+import co.tiagoaguiar.course.instagram.add.data.AddFakeRemoteDtaSource
+import co.tiagoaguiar.course.instagram.add.data.AddLocalDataSource
+import co.tiagoaguiar.course.instagram.add.data.AddRepository
+import co.tiagoaguiar.course.instagram.add.presenter.AddPresenter
+import co.tiagoaguiar.course.instagram.common.util.PhotoCache
+import co.tiagoaguiar.course.instagram.common.util.PostsCache
+import co.tiagoaguiar.course.instagram.common.util.UserCache
 import co.tiagoaguiar.course.instagram.home.Home
 import co.tiagoaguiar.course.instagram.home.data.HomeDataSourceFactory
 import co.tiagoaguiar.course.instagram.home.data.HomeFeedCache
@@ -10,12 +18,14 @@ import co.tiagoaguiar.course.instagram.login.data.LoginFakeDataSource
 import co.tiagoaguiar.course.instagram.login.data.LoginRepository
 import co.tiagoaguiar.course.instagram.login.presentation.LoginPresenter
 import co.tiagoaguiar.course.instagram.profile.Profile
-import co.tiagoaguiar.course.instagram.profile.data.*
+import co.tiagoaguiar.course.instagram.profile.data.ProfileDataSourceFactory
+import co.tiagoaguiar.course.instagram.profile.data.ProfileRepository
 import co.tiagoaguiar.course.instagram.profile.presenter.ProfilePresenter
 import co.tiagoaguiar.course.instagram.register.RegisterEmail
 import co.tiagoaguiar.course.instagram.register.RegisterNamePassword
 import co.tiagoaguiar.course.instagram.register.RegisterPhoto
 import co.tiagoaguiar.course.instagram.register.data.RegisterFakeDataSource
+import co.tiagoaguiar.course.instagram.register.data.RegisterLocalDataSource
 import co.tiagoaguiar.course.instagram.register.data.RegisterRepository
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterEmailPresenter
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterNamePasswordPresenter
@@ -27,7 +37,7 @@ import co.tiagoaguiar.course.instagram.splash.presenter.SplashPresenter
 
 object DependencyInjector {
 
-    fun splashRepository() : SplashRepository{
+    private fun splashRepository() : SplashRepository{
         return SplashRepository(SplashFakeDataSource())
     }
 
@@ -35,7 +45,7 @@ object DependencyInjector {
         return SplashPresenter(view, splashRepository())
     }
 
-    fun loginRepository() : LoginRepository{
+    private fun loginRepository() : LoginRepository{
         return LoginRepository(LoginFakeDataSource())
     }
 
@@ -43,8 +53,8 @@ object DependencyInjector {
         return LoginPresenter(view, loginRepository())
     }
 
-    fun registerRepository() : RegisterRepository {
-        return RegisterRepository(RegisterFakeDataSource())
+    private fun registerRepository() : RegisterRepository {
+        return RegisterRepository(RegisterLocalDataSource(UserCache, PhotoCache), RegisterFakeDataSource())
     }
 
     fun registerEmailPresenter(view: RegisterEmail.View) : RegisterEmail.Presenter{
@@ -59,20 +69,28 @@ object DependencyInjector {
         return RegisterPhotoPresenter(view, registerRepository())
     }
 
-    fun mainProfileRepository() : ProfileRepository{
-        return ProfileRepository(ProfileDataSourceFactory(ProfileUserCache, ProfilePostsCache))
+    private fun mainProfileRepository() : ProfileRepository{
+        return ProfileRepository(ProfileDataSourceFactory(UserCache, PhotoCache, PostsCache))
     }
 
     fun mainProfilePresenter(view: Profile.View) : Profile.Presenter{
         return ProfilePresenter(view, mainProfileRepository())
     }
 
-    fun mainHomeRepository() : HomeRepository{
+    private fun mainHomeRepository() : HomeRepository{
         return HomeRepository(HomeDataSourceFactory(HomeFeedCache))
     }
 
     fun mainHomePresenter(view: Home.View) : Home.Presenter{
         return HomePresenter(view, mainHomeRepository())
+    }
+
+    private fun mainAddRepository() : AddRepository {
+        return AddRepository(AddLocalDataSource(), AddFakeRemoteDtaSource())
+    }
+
+    fun mainAddPresenter(view: Add.View) : Add.Presenter {
+        return AddPresenter(view, mainAddRepository())
     }
 
 }

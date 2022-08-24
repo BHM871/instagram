@@ -5,18 +5,22 @@ import co.tiagoaguiar.course.instagram.common.model.Post
 
 object HomeFeedCache : Cache<List<Post>> {
 
-    var posts: List<Post>? = null
+    var feed: List<Post>? = null
 
     override fun isCached(): Boolean {
-        if (posts == null) posts = null
-        return posts != null
+        if (feed == null) feed = null
+        return feed != null
     }
 
     override fun get(key: String): List<Post>? {
-        return posts
+        return feed
     }
 
     override fun put(data: List<Post>) {
-        posts = data
+        feed = data
+    }
+
+    override fun remove() {
+        feed = null
     }
 }

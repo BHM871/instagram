@@ -3,18 +3,20 @@ package co.tiagoaguiar.course.instagram.profile.data
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
+import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileLocalDataSource(
     private val profileUserCache: Cache<UserAuth>,
+    private val profilePhotoCache: Cache<Photo>,
     private val profilePostCache: Cache<List<Post>>
 ) : ProfileDataSource {
 
-    override fun fetchUserProfile(uuid: String, callback: RequestCallback<UserAuth>) {
-        val userAuth = profileUserCache.get(uuid)
+    override fun fetchUserProfile(userUUID: String, callback: RequestCallback<UserAuth>) {
+        val userAuth = profileUserCache.get(userUUID)
 
-        if (userAuth == null){
+        if (userAuth == null) {
             callback.onFailure("User not found")
         } else {
             callback.onSuccess(userAuth)
@@ -23,10 +25,18 @@ class ProfileLocalDataSource(
         callback.onComplete()
     }
 
-    override fun fetchUserPost(uuid: String, callback: RequestCallback<List<Post>>) {
-        val posts = profilePostCache.get(uuid)
+    override fun fetchUserPhoto(userUUID: String, callback: RequestCallback<Photo?>) {
+        val photo = profilePhotoCache.get(userUUID)
 
-        if (posts == null){
+        callback.onSuccess(photo)
+
+        callback.onComplete()
+    }
+
+    override fun fetchUserPost(userUUID: String, callback: RequestCallback<List<Post>>) {
+        val posts = profilePostCache.get(userUUID)
+
+        if (posts == null) {
             callback.onFailure("List not found")
         } else {
             callback.onSuccess(posts)
@@ -41,6 +51,13 @@ class ProfileLocalDataSource(
 
     override fun putUser(response: UserAuth) {
         profileUserCache.put(response)
+    }
+
+    override fun putPhoto(response: Photo?) {
+        if (response != null) profilePhotoCache.put(response)
+        else {
+            profilePhotoCache.put(Photo.EMPTY)
+        }
     }
 
     override fun putPosts(response: List<Post>) {

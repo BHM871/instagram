@@ -11,15 +11,15 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 interface Profile {
 
     interface Presenter : BasePresenter {
-        fun fetchUserProfile()
+        fun fetchUserProfile(context: Context)
         fun fetchUserPosts()
-        fun updateProfile(context: Context, photoUri: Uri)
+        fun updatePhoto(context: Context, photoUri: Uri)
     }
 
     interface View : BaseView<Presenter>{
         fun showProgress(enabled: Boolean)
 
-        fun displayUserProfile(userAuth: UserAuth)
+        fun displayUserProfile(userAuth: UserAuth, image: Bitmap?)
         fun displayRequestFailure(message: String)
 
         fun displayEmptyPosts()

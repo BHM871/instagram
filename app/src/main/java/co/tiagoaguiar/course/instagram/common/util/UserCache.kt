@@ -1,9 +1,9 @@
-package co.tiagoaguiar.course.instagram.profile.data
+package co.tiagoaguiar.course.instagram.common.util
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
-object ProfileUserCache : Cache<UserAuth> {
+object UserCache : Cache<UserAuth> {
 
     var userAuth: UserAuth? = null
 
@@ -21,5 +21,9 @@ object ProfileUserCache : Cache<UserAuth> {
 
     override fun put(data: UserAuth) {
         userAuth = data
+    }
+
+    override fun remove() {
+        userAuth = null
     }
 }

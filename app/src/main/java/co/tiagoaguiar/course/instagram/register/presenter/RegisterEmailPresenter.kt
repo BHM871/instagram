@@ -19,8 +19,8 @@ class RegisterEmailPresenter(
 
         if (isEmailValid){
             view?.showProgress(true)
-            repository.create(email, object : RequestCallback<Any?> {
-                override fun onSuccess(data: Any?) {
+            repository.create(email, object : RequestCallback<Boolean> {
+                override fun onSuccess(data: Boolean) {
                     view?.goToNamePasswordScreen(email)
                 }
 

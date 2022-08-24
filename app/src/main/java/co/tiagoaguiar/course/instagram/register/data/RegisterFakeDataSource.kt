@@ -11,11 +11,11 @@ import java.util.*
 
 class RegisterFakeDataSource : RegisterDataSource {
 
-    override fun createUser(email: String, callback: RequestCallback<Any?>) {
+    override fun createUser(email: String, callback: RequestCallback<Boolean>) {
         Handler(Looper.getMainLooper()).postDelayed({
 
             when(Database.usersAuth.firstOrNull{it.email == email}){
-               null -> callback.onSuccess(null)
+               null -> callback.onSuccess(true)
                 else -> callback.onFailure("Usuario já cadastrado")
             }
 
@@ -28,7 +28,7 @@ class RegisterFakeDataSource : RegisterDataSource {
         name: String,
         username: String,
         password: String,
-        callback: RequestCallback<Any?>
+        callback: RequestCallback<UserAuth>
     ) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.usersAuth.firstOrNull{it.email == email}
@@ -45,9 +45,30 @@ class RegisterFakeDataSource : RegisterDataSource {
                         password = password)
                 )
 
+                val newUser = Database.usersAuth.first { it.email == email }
+
                 if (created){
-                    Database.sessionAuth = UserAuth(uuid = UUID.randomUUID().toString(), name = name, username = username, email = email, password = password)
-                    callback.onSuccess(null)
+                    Database.sessionAuth = newUser
+
+                    var followers = Database.followers[newUser.uuid]
+                    if (followers == null){
+                        followers = mutableSetOf()
+                        Database.followers[newUser.uuid] = followers
+                    }
+
+                    var posts = Database.posts[newUser.uuid]
+                    if (posts == null){
+                        posts = mutableSetOf()
+                        Database.posts[newUser.uuid] = posts
+                    }
+
+                    var feed = Database.feed[newUser.uuid]
+                    if (feed == null){
+                        feed = mutableSetOf()
+                        Database.feed[newUser.uuid] = feed
+                    }
+
+                    callback.onSuccess(Database.sessionAuth!!)
                 }
             }
 
@@ -55,7 +76,7 @@ class RegisterFakeDataSource : RegisterDataSource {
         }, 2000)
     }
 
-    override fun updateUser(photoUri: Uri, callback: RequestCallback<Any?>) {
+    override fun updateUser(userUUID: String, photoUri: Uri, callback: RequestCallback<Photo>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.sessionAuth
 
@@ -63,11 +84,9 @@ class RegisterFakeDataSource : RegisterDataSource {
                 callback.onFailure("Usuario não encontrado")
             } else {
                 val photo = Photo(userAuth.uuid, photoUri)
-                val created = Database.photo.add(photo)
+                Database.photo[userUUID] = photo
 
-                if (created){
-                    callback.onSuccess(null)
-                }
+                callback.onSuccess(photo)
             }
 
             callback.onComplete()

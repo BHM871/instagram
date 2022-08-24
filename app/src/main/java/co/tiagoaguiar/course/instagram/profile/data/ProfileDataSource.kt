@@ -8,13 +8,15 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 interface ProfileDataSource {
 
-    fun fetchUserProfile(uuid: String, callback: RequestCallback<UserAuth>)
-    fun fetchUserPost(uuid: String, callback: RequestCallback<List<Post>>)
+    fun fetchUserProfile(userUUID: String, callback: RequestCallback<UserAuth>)
+    fun fetchUserPhoto(userUUID: String, callback: RequestCallback<Photo?>)
+    fun fetchUserPost(userUUID: String, callback: RequestCallback<List<Post>>)
 
     fun fetchSession() : UserAuth { throw UnsupportedOperationException("User not found") }
     fun putUser(response: UserAuth) { throw UnsupportedOperationException("User not found") }
+    fun putPhoto(response: Photo?) { throw UnsupportedOperationException("User not found") }
     fun putPosts(response: List<Post>) { throw UnsupportedOperationException("User not found") }
 
-    fun updateProfile(uuid: String, photoUri: Uri, callback: RequestCallback<Photo>) { throw UnsupportedOperationException("User not found") }
-    fun updatePosts(uuid: String, post: Post, callback: RequestCallback<List<Post>>) { throw UnsupportedOperationException("User not found") }
+    fun updatePhoto(userUUID: String, photoUri: Uri, callback: RequestCallback<Photo>) { throw UnsupportedOperationException("User not found") }
+    fun updatePosts(userUUID: String, post: Post, callback: RequestCallback<List<Post>>) { throw UnsupportedOperationException("User not found") }
 }

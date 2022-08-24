@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.net.Uri
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.setFragmentResultListener
@@ -51,7 +52,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                     openDialog()
                 }
 
-                presenter.fetchUserProfile()
+                presenter.fetchUserProfile(requireContext())
 
             }
         }
@@ -63,19 +64,28 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         setFragmentResultListener("cropKey") { _, bundle ->
             val uri = bundle.getParcelable<Uri>(ImageCroppedFragment.KEY_URI)
             currentPhoto = uri
-            currentPhoto?.let { presenter.updateProfile(requireContext(), it) }
+            currentPhoto?.let { presenter.updatePhoto(requireContext(), it) }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_add -> {
+
+            }
+        }
+        return false
     }
 
     override fun showProgress(enabled: Boolean) {
         binding?.profileProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
-    override fun displayUserProfile(userAuth: UserAuth) {
-        /*if (image != null) {
-            binding?.profileImgIcon?.setImageBitmap(image)
-            binding?.profileImgAdd?.visibility = View.GONE
-        }*/
+    override fun displayUserProfile(userAuth: UserAuth, image: Bitmap?) {
+        if (image != null) {
+            binding?.profileIncludeProfile?.profileImgIcon?.setImageBitmap(image)
+            binding?.profileIncludeProfile?.profileImgAdd?.visibility = View.GONE
+        }
 
         binding?.let { binding ->
             with(binding) {

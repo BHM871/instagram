@@ -1,5 +1,6 @@
 package co.tiagoaguiar.course.instagram.home.data
 
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import co.tiagoaguiar.course.instagram.R
@@ -9,9 +10,9 @@ import co.tiagoaguiar.course.instagram.common.model.Post
 
 class HomeFakeDataSource : HomeDataSource {
 
-    override fun fetchFeed(uuid: String, callback: RequestCallback<List<Post>>) {
+    override fun fetchFeed(userUUId: String, callback: RequestCallback<List<Post>>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val posts = Database.posts[uuid]
+            val posts = Database.posts[userUUId]
 
             val list = mutableListOf<Post>()
             for (i in 0 until 30) {
@@ -20,7 +21,7 @@ class HomeFakeDataSource : HomeDataSource {
                         i,
                         Post(
                             "$i",
-                            R.drawable.ic_insta_add,
+                            Uri.EMPTY,
                             "username",
                             1202L,
                             it

@@ -27,7 +27,7 @@ class ProfileAdapter : RecyclerView.Adapter<ProfileAdapter.ProfileHolder>() {
     class ProfileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         fun bind(post: Post) {
-            itemView.findViewById<ImageView>(R.id.item_profile_img_grid).setImageResource(post.uri)
+            itemView.findViewById<ImageView>(R.id.item_profile_img_grid).setImageURI(post.uri)
         }
 
     }

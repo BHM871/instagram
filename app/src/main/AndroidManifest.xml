@@ -23,8 +23,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Instagram">
         <activity
+            android:label="@string/photo"
+            android:name=".add.view.AddActivity"
+            android:exported="false" />
+        <activity
             android:name=".splash.view.SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,13 +39,19 @@
         </activity>
         <activity
             android:name=".main.view.MainActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".register.view.RegisterActivity"
-            android:exported="true"/>
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".login.view.LoginActivity"
-            android:exported="true" />
+            android:exported="true"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

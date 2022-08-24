@@ -10,8 +10,8 @@ class HomeLocalDataSource(
     private val homeFeedCache: Cache<List<Post>>
 ) : HomeDataSource {
 
-    override fun fetchFeed(uuid: String, callback: RequestCallback<List<Post>>) {
-        val posts = homeFeedCache.get(uuid)
+    override fun fetchFeed(userUUId: String, callback: RequestCallback<List<Post>>) {
+        val posts = homeFeedCache.get(userUUId)
 
         if (posts == null){
             callback.onFailure("List not found")

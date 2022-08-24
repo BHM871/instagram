@@ -6,7 +6,7 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 interface HomeDataSource {
 
-    fun fetchFeed(uuid: String, callback: RequestCallback<List<Post>>)
+    fun fetchFeed(userUUId: String, callback: RequestCallback<List<Post>>)
 
     fun fetchSession() : UserAuth { throw UnsupportedOperationException("User not found") }
     fun putFeed(response: List<Post>) { throw UnsupportedOperationException("User not found") }

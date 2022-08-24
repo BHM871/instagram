@@ -55,8 +55,8 @@ class RegisterNamePasswordPresenter(
             view?.showProgress(true)
 
             repository.create(email, name, username, password, object :
-                RequestCallback<Any?> {
-                override fun onSuccess(data: Any?) {
+                RequestCallback<Boolean> {
+                override fun onSuccess(data: Boolean) {
                     view?.onCreateSuccess(name)
                 }
 

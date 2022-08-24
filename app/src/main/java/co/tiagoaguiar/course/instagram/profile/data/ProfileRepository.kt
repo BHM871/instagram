@@ -29,6 +29,27 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
         })
     }
 
+    fun fetchUserPhoto(callback: RequestCallback<Photo?>) {
+        val localDataSource = dataSourceFactory.createLocalDataSource()
+        val userAuth = localDataSource.fetchSession()
+
+        val data = dataSourceFactory.createFromUser()
+        data.fetchUserPhoto(userAuth.uuid, object : RequestCallback<Photo?> {
+            override fun onSuccess(data: Photo?) {
+                localDataSource.putPhoto(data)
+                callback.onSuccess(data)
+            }
+
+            override fun onFailure(message: String) {
+                callback.onFailure(message)
+            }
+
+            override fun onComplete() {
+                callback.onComplete()
+            }
+        })
+    }
+
     fun fetchUserPost(callback: RequestCallback<List<Post>>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
         val userAuth = localDataSource.fetchSession()
@@ -50,15 +71,15 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
         })
     }
 
-    fun updateProfile(photoUri: Uri, callback: RequestCallback<Photo>){
+    fun updatePhoto(photoUri: Uri, callback: RequestCallback<Photo>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
         val userAuth = localDataSource.fetchSession()
 
         val data = ProfileFakeDataSource()
 
-        data.updateProfile(userAuth.uuid, photoUri, object : RequestCallback<Photo> {
+        data.updatePhoto(userAuth.uuid, photoUri, object : RequestCallback<Photo> {
             override fun onSuccess(data: Photo) {
-                localDataSource.putUser(userAuth)
+                localDataSource.putPhoto(data)
                 callback.onSuccess(data)
             }
 

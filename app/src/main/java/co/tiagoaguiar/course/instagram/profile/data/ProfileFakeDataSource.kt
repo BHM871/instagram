@@ -11,23 +11,35 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileFakeDataSource : ProfileDataSource {
 
-    override fun fetchUserProfile(uuid: String, callback: RequestCallback<UserAuth>) {
+    override fun fetchUserProfile(userUUID: String, callback: RequestCallback<UserAuth>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val userAuth = Database.usersAuth.firstOrNull { uuid == it.uuid }
+            val userAuth = Database.usersAuth.firstOrNull { userUUID == it.uuid }
 
             if (userAuth != null) {
                 callback.onSuccess(userAuth)
             } else {
-                callback.onFailure("Usuario não encontrado")
+                callback.onFailure("User not found")
             }
 
             callback.onComplete()
         }, 2000)
     }
 
-    override fun fetchUserPost(uuid: String, callback: RequestCallback<List<Post>>) {
+    override fun fetchUserPhoto(userUUID: String, callback: RequestCallback<Photo?>) {
+        val photo = Database.photo[userUUID]
+
+        if (photo != null){
+            callback.onSuccess(photo)
+        } else {
+            callback.onFailure("Photo not found")
+        }
+
+        callback.onComplete()
+    }
+
+    override fun fetchUserPost(userUUID: String, callback: RequestCallback<List<Post>>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val posts = Database.posts[uuid]
+            val posts = Database.posts[userUUID]
 
             callback.onSuccess(posts?.toList() ?: emptyList())
 
@@ -35,19 +47,17 @@ class ProfileFakeDataSource : ProfileDataSource {
         }, 2000)
     }
 
-    override fun updateProfile(uuid: String, photoUri: Uri, callback: RequestCallback<Photo>) {
+    override fun updatePhoto(userUUID: String, photoUri: Uri, callback: RequestCallback<Photo>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val userAuth = Database.usersAuth.firstOrNull{ it.uuid == uuid }
+            val userAuth = Database.sessionAuth
 
             if (userAuth == null) {
-                callback.onFailure("Usuario não encontrado")
+                callback.onFailure("User not found")
             } else {
-                val photo = Photo(uuid, photoUri)
-                val created = Database.photo.add(photo)
+                val photo = Photo(userUUID, photoUri)
+                Database.photo[userUUID] = photo
 
-                if (created) {
-                    callback.onSuccess(photo)
-                }
+                callback.onSuccess(photo)
             }
 
             callback.onComplete()
