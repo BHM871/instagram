@@ -5,8 +5,7 @@ import java.util.*
 
 object Database {
 
-    val usersAuth = hashSetOf<UserAuth>()
-    val photo = hashMapOf<String, Photo>()
+    val usersAuth = mutableListOf<UserAuth>()
     val posts = hashMapOf<String, MutableSet<Post>>()
     val feed = hashMapOf<String, MutableSet<Post>>()
     val followers = hashMapOf<String, Set<String>>()

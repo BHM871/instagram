@@ -32,10 +32,9 @@ class AddActivity : AppCompatActivity(), Add.View {
         val drawable = ContextCompat.getDrawable(this, R.drawable.ic_arrow_back)
         supportActionBar?.setHomeAsUpIndicator(drawable)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = ""
 
         try {
-            uri = intent?.extras?.getParcelable<Uri>("photoUri") ?: throw RuntimeException("photo not found")
+            uri = intent?.extras?.getParcelable("photoUri") ?: throw RuntimeException("photo not found")
         } catch (e: RuntimeException) {
             Toast.makeText(this, e.message, Toast.LENGTH_SHORT).show()
             finish()
@@ -58,7 +57,10 @@ class AddActivity : AppCompatActivity(), Add.View {
                 true
             }
             R.id.menu_add_share -> {
-                presenter.createPost(uri, binding.addEditCaption.text.toString())
+                if (binding.addEditCaption.text.toString().isNotEmpty())
+                    presenter.createPost(uri, binding.addEditCaption.text.toString())
+                else
+                    presenter.createPost(uri, "")
                 true
             }
             else -> false
@@ -70,6 +72,7 @@ class AddActivity : AppCompatActivity(), Add.View {
     }
 
     override fun displayRequestSuccess() {
+        setResult(RESULT_OK)
         finish()
     }
 

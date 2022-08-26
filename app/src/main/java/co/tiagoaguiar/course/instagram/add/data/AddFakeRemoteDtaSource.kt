@@ -27,8 +27,7 @@ class AddFakeRemoteDtaSource : AddDataSource {
             }
 
             val post = Post(UUID.randomUUID().toString(), uri, caption, System.currentTimeMillis(), Database.sessionAuth!!)
-            posts.add(post)
-
+            Database.posts[userUUID]?.add(post)
             Database.usersAuth.firstOrNull { it.uuid == userUUID }?.postCount =
                 Database.usersAuth.firstOrNull { it.uuid == userUUID }?.postCount?.plus(1)!!
 

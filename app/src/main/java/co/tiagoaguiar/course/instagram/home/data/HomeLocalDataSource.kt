@@ -30,4 +30,8 @@ class HomeLocalDataSource(
         homeFeedCache.put(response)
     }
 
+    override fun removeCache() {
+        homeFeedCache.remove()
+    }
+
 }

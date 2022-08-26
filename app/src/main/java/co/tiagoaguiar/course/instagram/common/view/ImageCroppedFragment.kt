@@ -87,7 +87,6 @@ class ImageCroppedFragment : Fragment(R.layout.fragment_image_cropped) {
             ViewGroup.LayoutParams.MATCH_PARENT,
             AppBarLayout.LayoutParams.MATCH_PARENT
         )
-         actionBarHeight= resources.getResourceName(R.attr.actionBarSize).toInt()
         layoutParams.setMargins(0, 0, 0, actionBarHeight)
 
         binding?.containerCropped?.layoutParams = layoutParams

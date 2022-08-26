@@ -1,11 +1,11 @@
 package co.tiagoaguiar.course.instagram.common.base
 
+import android.content.Context
 import co.tiagoaguiar.course.instagram.add.Add
 import co.tiagoaguiar.course.instagram.add.data.AddFakeRemoteDtaSource
 import co.tiagoaguiar.course.instagram.add.data.AddLocalDataSource
 import co.tiagoaguiar.course.instagram.add.data.AddRepository
 import co.tiagoaguiar.course.instagram.add.presenter.AddPresenter
-import co.tiagoaguiar.course.instagram.common.util.PhotoCache
 import co.tiagoaguiar.course.instagram.common.util.PostsCache
 import co.tiagoaguiar.course.instagram.common.util.UserCache
 import co.tiagoaguiar.course.instagram.home.Home
@@ -17,6 +17,10 @@ import co.tiagoaguiar.course.instagram.login.Login
 import co.tiagoaguiar.course.instagram.login.data.LoginFakeDataSource
 import co.tiagoaguiar.course.instagram.login.data.LoginRepository
 import co.tiagoaguiar.course.instagram.login.presentation.LoginPresenter
+import co.tiagoaguiar.course.instagram.post.Post
+import co.tiagoaguiar.course.instagram.post.data.PostLocalDataSource
+import co.tiagoaguiar.course.instagram.post.data.PostRepository
+import co.tiagoaguiar.course.instagram.post.presenter.PostPresenter
 import co.tiagoaguiar.course.instagram.profile.Profile
 import co.tiagoaguiar.course.instagram.profile.data.ProfileDataSourceFactory
 import co.tiagoaguiar.course.instagram.profile.data.ProfileRepository
@@ -54,7 +58,7 @@ object DependencyInjector {
     }
 
     private fun registerRepository() : RegisterRepository {
-        return RegisterRepository(RegisterLocalDataSource(UserCache, PhotoCache), RegisterFakeDataSource())
+        return RegisterRepository(RegisterLocalDataSource(UserCache), RegisterFakeDataSource())
     }
 
     fun registerEmailPresenter(view: RegisterEmail.View) : RegisterEmail.Presenter{
@@ -70,7 +74,7 @@ object DependencyInjector {
     }
 
     private fun mainProfileRepository() : ProfileRepository{
-        return ProfileRepository(ProfileDataSourceFactory(UserCache, PhotoCache, PostsCache))
+        return ProfileRepository(ProfileDataSourceFactory(UserCache, PostsCache))
     }
 
     fun mainProfilePresenter(view: Profile.View) : Profile.Presenter{
@@ -91,6 +95,14 @@ object DependencyInjector {
 
     fun mainAddPresenter(view: Add.View) : Add.Presenter {
         return AddPresenter(view, mainAddRepository())
+    }
+
+    private fun postRepository(context: Context) : PostRepository{
+        return PostRepository(PostLocalDataSource(context))
+    }
+
+    fun postPresenter(view: Post.View, context: Context) : Post.Presenter{
+        return PostPresenter(view, postRepository(context))
     }
 
 }

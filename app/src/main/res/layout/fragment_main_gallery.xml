@@ -10,29 +10,28 @@
         android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/gallery_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-            <include
-                android:id="@+id/profile_include_profile"
-                layout="@layout/fragment_main_profile_profile" />
-
-            <com.google.android.material.bottomnavigation.BottomNavigationView
-                android:id="@+id/menu_profile_nav"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/profile_grid_background"
-                app:labelVisibilityMode="unlabeled"
-                app:layout_constraintTop_toBottomOf="@id/profile_include_profile"
-                app:menu="@menu/menu_bottom_profile_nav" />
+            <ImageView
+                android:id="@+id/gallery_img_photo"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:background="@color/black"
+                app:layout_constraintDimensionRatio="1:1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/profile_recycler"
+                android:id="@+id/gallery_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/menu_profile_nav"
+                app:layout_constraintTop_toBottomOf="@+id/gallery_img_photo"
                 tools:listitem="@layout/item_profile_grid" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -40,7 +39,7 @@
     </androidx.core.widget.NestedScrollView>
 
     <TextView
-        android:id="@+id/profile_txt_empty_list"
+        android:id="@+id/gallery_txt_empty_list"
         style="@style/Theme.Instagram.TextViewProfile"
         android:layout_width="wrap_content"
         android:layout_gravity="center"
@@ -49,15 +48,11 @@
         tools:visibility="visible" />
 
     <ProgressBar
-        android:id="@+id/profile_progress_bar"
+        android:id="@+id/gallery_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="3dp"
-        android:indeterminateTint="@color/black"
-        android:indeterminateTintMode="src_in"
         android:visibility="gone"
         tools:visibility="visible" />
-
 
 </FrameLayout>

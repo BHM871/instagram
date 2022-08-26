@@ -4,8 +4,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import co.tiagoaguiar.course.instagram.R
-import co.tiagoaguiar.course.instagram.add.view.CameraFragment
-import co.tiagoaguiar.course.instagram.add.view.GalleryFragment
+import co.tiagoaguiar.course.instagram.post.view.CameraFragment
+import co.tiagoaguiar.course.instagram.post.view.GalleryFragment
 
 class AddViewPageAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa) {
 

@@ -1,20 +1,24 @@
 package co.tiagoaguiar.course.instagram.home.view
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
-import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainHomeBinding
 import co.tiagoaguiar.course.instagram.home.Home
 import co.tiagoaguiar.course.instagram.home.util.HomeAdapter
+import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 
 @SuppressLint("ResourceType")
 class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
@@ -24,6 +28,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
     override lateinit var presenter: Home.Presenter
 
+    private var attachListenerPhoto: AttachListenerPhoto? = null
     private var adapter = HomeAdapter()
 
     override fun setupPresenter() {
@@ -39,6 +44,20 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
     }
 
     override fun getMenu() = R.menu.menu_profile
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            android.R.id.home -> {
+                setFragmentResult("addScreen", bundleOf("screen" to "camera"))
+                attachListenerPhoto?.goToFragmentCamera()
+            }
+            R.id.menu_add -> {
+                setFragmentResult("addScreen", bundleOf("screen" to "gallery"))
+                attachListenerPhoto?.gotoFragmentGallery()
+            }
+        }
+        return false
+    }
 
     override fun showProgress(enabled: Boolean) {
         binding?.homeProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
@@ -66,17 +85,17 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
             val iconLike = (views["iconLike"] as ImageView)
 
             when(clivkView.id) {
-                R.id.item_home_img_post -> doubleClickLike(post, imgLike, iconLike)
+                R.id.item_home_img_post -> onDoubleClickItem(post, imgLike, iconLike)
                 R.id.item_home_container_img_like -> like(imgLike, iconLike)
             }
         }
     }
 
-    private fun doubleClickLike(post: Post, imgLike: ImageView, iconLike: ImageView) {
+    private fun onDoubleClickItem(post: Post, imgLike: ImageView, iconLike: ImageView) {
         post.countClick++
         if (post.countClick == 2) {
             imgLike.animate().apply {
-                duration = 200
+                duration = 250
                 alpha(1.0f)
                 start()
             }
@@ -85,11 +104,11 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
             Handler(Looper.getMainLooper()).postDelayed({
                 imgLike.animate().apply {
-                    duration = 200
+                    duration = 250
                     alpha(0f)
                     start()
                 }
-            }, 200)
+            }, 250)
         }
         Handler(Looper.getMainLooper()).postDelayed({
             post.countClick = 0
@@ -98,7 +117,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
     private fun like(imgLike: ImageView, iconLike: ImageView) {
         imgLike.animate().apply {
-            duration = 200
+            duration = 250
             alpha(1.0f)
             start()
         }
@@ -107,10 +126,22 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
         Handler(Looper.getMainLooper()).postDelayed({
             imgLike.animate().apply {
-                duration = 200
+                duration = 250
                 alpha(0f)
                 start()
             }
-        }, 200)
+        }, 250)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        if (context is AttachListenerPhoto)
+            attachListenerPhoto = context
+    }
+
+    override fun onDestroy() {
+        attachListenerPhoto = null
+        super.onDestroy()
     }
 }

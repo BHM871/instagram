@@ -1,10 +1,9 @@
-package co.tiagoaguiar.course.instagram.add.view
+package co.tiagoaguiar.course.instagram.post.view
 
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
+import android.util.Size
 import android.view.View
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -19,11 +18,11 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.util.Files
-import co.tiagoaguiar.course.instagram.databinding.FragmentMainAddCameraBinding
+import co.tiagoaguiar.course.instagram.databinding.FragmentMainCameraBinding
 
-class CameraFragment : Fragment(R.layout.fragment_main_add_camera) {
+class CameraFragment : Fragment(R.layout.fragment_main_camera) {
 
-    private var binding: FragmentMainAddCameraBinding? = null
+    private var binding: FragmentMainCameraBinding? = null
 
     private lateinit var previewView: PreviewView
     private var imgCapture: ImageCapture? = null
@@ -39,28 +38,12 @@ class CameraFragment : Fragment(R.layout.fragment_main_add_camera) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding = FragmentMainAddCameraBinding.bind(view)
+        binding = FragmentMainCameraBinding.bind(view)
 
         previewView = binding?.previewViewCamera!!
         binding?.cameraBtnCapture?.setOnClickListener {
-            blink()
             takePhoto()
         }
-    }
-
-    private fun blink() {
-        previewView.animate().apply {
-            duration = 75
-            alpha(0.0f)
-            start()
-        }
-        Handler(Looper.getMainLooper()).postDelayed({
-            previewView.animate().apply {
-                duration = 75
-                alpha(1.0f)
-                start()
-            }
-        }, 75)
     }
 
     private fun takePhoto() {
@@ -92,9 +75,12 @@ class CameraFragment : Fragment(R.layout.fragment_main_add_camera) {
                 .also {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
+
             val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
-            imgCapture = ImageCapture.Builder().build()
+            imgCapture = ImageCapture.Builder()
+                .setTargetResolution(Size(480, 480))
+                .build()
 
             try {
                 cameraProvider.unbindAll()

@@ -13,7 +13,7 @@
         android:icon="@drawable/ic_insta_search"/>
 
     <item
-        android:id="@+id/menu_bottom_camera"
+        android:id="@+id/menu_bottom_add"
         android:title="@string/home"
         android:icon="@drawable/ic_insta_add"/>
 

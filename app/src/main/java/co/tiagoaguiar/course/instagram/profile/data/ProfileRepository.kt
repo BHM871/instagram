@@ -2,7 +2,6 @@ package co.tiagoaguiar.course.instagram.profile.data
 
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
-import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
@@ -16,27 +15,6 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
         data.fetchUserProfile(userAuth.uuid, object : RequestCallback<UserAuth> {
             override fun onSuccess(data: UserAuth) {
                 localDataSource.putUser(data)
-                callback.onSuccess(data)
-            }
-
-            override fun onFailure(message: String) {
-                callback.onFailure(message)
-            }
-
-            override fun onComplete() {
-                callback.onComplete()
-            }
-        })
-    }
-
-    fun fetchUserPhoto(callback: RequestCallback<Photo?>) {
-        val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userAuth = localDataSource.fetchSession()
-
-        val data = dataSourceFactory.createFromUser()
-        data.fetchUserPhoto(userAuth.uuid, object : RequestCallback<Photo?> {
-            override fun onSuccess(data: Photo?) {
-                localDataSource.putPhoto(data)
                 callback.onSuccess(data)
             }
 
@@ -71,26 +49,17 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
         })
     }
 
-    fun updatePhoto(photoUri: Uri, callback: RequestCallback<Photo>){
+    fun updatePhoto(photoUri: Uri, callback: RequestCallback<Uri>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
         val userAuth = localDataSource.fetchSession()
 
         val data = ProfileFakeDataSource()
+        data.updatePhoto(userAuth.uuid, photoUri, callback)
+    }
 
-        data.updatePhoto(userAuth.uuid, photoUri, object : RequestCallback<Photo> {
-            override fun onSuccess(data: Photo) {
-                localDataSource.putPhoto(data)
-                callback.onSuccess(data)
-            }
-
-            override fun onFailure(message: String) {
-                callback.onFailure(message)
-            }
-
-            override fun onComplete() {
-                callback.onComplete()
-            }
-        })
+    fun clearCache(){
+        val localDataSource = dataSourceFactory.createLocalDataSource()
+        localDataSource.removeCache()
     }
 
 }

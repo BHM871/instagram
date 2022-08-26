@@ -1,23 +1,21 @@
-package co.tiagoaguiar.course.instagram.home
+package co.tiagoaguiar.course.instagram.post
 
+import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.BasePresenter
 import co.tiagoaguiar.course.instagram.common.base.BaseView
 import co.tiagoaguiar.course.instagram.common.model.Post
+import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
-interface Home {
+interface Post {
 
-    interface Presenter : BasePresenter{
-        fun fetchFeed()
-        fun clear()
+    interface Presenter : BasePresenter {
+        fun fetchPictures()
     }
 
     interface View : BaseView<Presenter> {
         fun showProgress(enabled: Boolean)
-
+        fun displayEmptyPictures()
+        fun displayFullPictures(pictures: List<Uri>)
         fun displayRequestFailure(message: String)
-
-        fun displayEmptyFeed()
-        fun displayFullFeed(posts: List<Post>)
     }
-
 }

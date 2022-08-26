@@ -10,7 +10,9 @@ import co.tiagoaguiar.course.instagram.common.model.Post
 
 class ProfileAdapter : RecyclerView.Adapter<ProfileAdapter.ProfileHolder>() {
 
-    var list: List<Post>  = mutableListOf()
+    var list: List<Post> = mutableListOf()
+
+    private var listener: ((Post) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProfileHolder =
         ProfileHolder(
@@ -24,10 +26,21 @@ class ProfileAdapter : RecyclerView.Adapter<ProfileAdapter.ProfileHolder>() {
 
     override fun getItemCount(): Int = list.size
 
-    class ProfileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    fun setListener(listener: (Post) -> Unit) {
+        this.listener = listener
+    }
 
-        fun bind(post: Post) {
-            itemView.findViewById<ImageView>(R.id.item_profile_img_grid).setImageURI(post.uri)
+    inner class ProfileHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        fun bind(post: Post) = with(itemView) {
+            val img = findViewById<ImageView>(R.id.item_profile_img_grid)
+
+            img.setImageURI(post.uri)
+
+            img.setOnLongClickListener {
+                listener?.invoke(post)
+                true
+            }
         }
 
     }

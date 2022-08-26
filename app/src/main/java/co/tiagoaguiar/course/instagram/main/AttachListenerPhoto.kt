@@ -25,4 +25,7 @@ interface AttachListenerPhoto : FragmentAttachListener {
 
     fun openDialogForPhoto()
 
+    fun goToFragmentCamera()
+    fun gotoFragmentGallery()
+
 }

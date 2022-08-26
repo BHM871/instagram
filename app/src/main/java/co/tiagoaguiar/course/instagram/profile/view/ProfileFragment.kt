@@ -2,11 +2,12 @@ package co.tiagoaguiar.course.instagram.profile.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Bitmap
 import android.net.Uri
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import co.tiagoaguiar.course.instagram.R
@@ -15,6 +16,7 @@ import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
+import co.tiagoaguiar.course.instagram.common.view.PostZoom
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainProfileBinding
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 import co.tiagoaguiar.course.instagram.profile.Profile
@@ -27,11 +29,10 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
 
     override lateinit var presenter: Profile.Presenter
 
-    private var mainPhoto: AttachListenerPhoto? = null
+    private var attachListenerPhoto: AttachListenerPhoto? = null
     private var currentPhoto: Uri? = null
 
     private lateinit var adapter: ProfileAdapter
-    private lateinit var posts: MutableList<Post>
 
     override fun setupPresenter() {
         presenter = DependencyInjector.mainProfilePresenter(this)
@@ -41,8 +42,8 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         binding?.let { binding ->
             with(binding) {
 
-                posts = mutableListOf()
                 adapter = ProfileAdapter()
+                adapter.setListener(onLongClicktem)
 
                 profileRecycler.layoutManager =
                     GridLayoutManager(requireContext(), 3)
@@ -52,7 +53,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                     openDialog()
                 }
 
-                presenter.fetchUserProfile(requireContext())
+                presenter.fetchUserProfile()
 
             }
         }
@@ -64,14 +65,19 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         setFragmentResultListener("cropKey") { _, bundle ->
             val uri = bundle.getParcelable<Uri>(ImageCroppedFragment.KEY_URI)
             currentPhoto = uri
-            currentPhoto?.let { presenter.updatePhoto(requireContext(), it) }
+            currentPhoto?.let { presenter.updatePhoto(it) }
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
+            android.R.id.home -> {
+                setFragmentResult("addScreen", bundleOf("screen" to "camera"))
+                attachListenerPhoto?.goToFragmentCamera()
+            }
             R.id.menu_add -> {
-
+                setFragmentResult("addScreen", bundleOf("screen" to "gallery"))
+                attachListenerPhoto?.gotoFragmentGallery()
             }
         }
         return false
@@ -81,12 +87,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         binding?.profileProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
-    override fun displayUserProfile(userAuth: UserAuth, image: Bitmap?) {
-        if (image != null) {
-            binding?.profileIncludeProfile?.profileImgIcon?.setImageBitmap(image)
-            binding?.profileIncludeProfile?.profileImgAdd?.visibility = View.GONE
-        }
-
+    override fun displayUserProfile(userAuth: UserAuth) {
         binding?.let { binding ->
             with(binding) {
                 profileIncludeProfile.profileTxtUsername.text = userAuth.username
@@ -97,6 +98,9 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                     userAuth.followersCount.toString()
 
                 presenter.fetchUserPosts()
+
+                profileIncludeProfile.profileImgIcon.setImageURI(userAuth.photoUri)
+                if (userAuth.photoUri != null) profileIncludeProfile.profileImgAdd.visibility = View.GONE
             }
         }
     }
@@ -122,8 +126,8 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun onUpdateUserSuccess(image: Bitmap) {
-        binding?.profileIncludeProfile?.profileImgIcon?.setImageBitmap(image)
+    override fun onUpdateUserSuccess(image: Uri) {
+        binding?.profileIncludeProfile?.profileImgIcon?.setImageURI(image)
         binding?.profileIncludeProfile?.profileImgAdd?.visibility = View.GONE
     }
 
@@ -135,18 +139,30 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     }
 
     private fun openDialog() {
-        mainPhoto?.openDialogForPhoto()
+        attachListenerPhoto?.openDialogForPhoto()
+    }
+
+    private val onLongClicktem = object : (Post) -> Unit {
+        override fun invoke(post: Post) {
+            PostZoom(requireContext()).apply{
+                setImageProfile(post.publisher.photoUri ?: Uri.EMPTY)
+                setTitle(post.publisher.username)
+                setImage(post.uri)
+                setCaption(post.description)
+                show()
+            }
+        }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (context is AttachListenerPhoto) {
-            mainPhoto = context
+            attachListenerPhoto = context
         }
     }
 
     override fun onDestroy() {
-        mainPhoto = null
+        attachListenerPhoto = null
         super.onDestroy()
     }
 

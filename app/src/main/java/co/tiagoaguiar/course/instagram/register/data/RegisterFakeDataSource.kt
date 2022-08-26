@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
-import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import java.util.*
 
@@ -15,7 +14,7 @@ class RegisterFakeDataSource : RegisterDataSource {
         Handler(Looper.getMainLooper()).postDelayed({
 
             when(Database.usersAuth.firstOrNull{it.email == email}){
-               null -> callback.onSuccess(true)
+                null -> callback.onSuccess(true)
                 else -> callback.onFailure("Usuario já cadastrado")
             }
 
@@ -76,17 +75,19 @@ class RegisterFakeDataSource : RegisterDataSource {
         }, 2000)
     }
 
-    override fun updateUser(userUUID: String, photoUri: Uri, callback: RequestCallback<Photo>) {
+    override fun updateUser(userUUID: String, photoUri: Uri, callback: RequestCallback<Uri?>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.sessionAuth
 
             if (userAuth == null){
                 callback.onFailure("Usuario não encontrado")
             } else {
-                val photo = Photo(userAuth.uuid, photoUri)
-                Database.photo[userUUID] = photo
+                val index = Database.usersAuth.indexOf(userAuth)
+                Database.usersAuth[index] = userAuth.copy(photoUri = photoUri)
+                Database.sessionAuth = Database.usersAuth[index]
 
-                callback.onSuccess(photo)
+                userAuth.photoUri = photoUri
+                callback.onSuccess(photoUri)
             }
 
             callback.onComplete()

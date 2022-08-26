@@ -5,7 +5,6 @@ import android.os.Handler
 import android.os.Looper
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
-import co.tiagoaguiar.course.instagram.common.model.Photo
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
@@ -25,18 +24,6 @@ class ProfileFakeDataSource : ProfileDataSource {
         }, 2000)
     }
 
-    override fun fetchUserPhoto(userUUID: String, callback: RequestCallback<Photo?>) {
-        val photo = Database.photo[userUUID]
-
-        if (photo != null){
-            callback.onSuccess(photo)
-        } else {
-            callback.onFailure("Photo not found")
-        }
-
-        callback.onComplete()
-    }
-
     override fun fetchUserPost(userUUID: String, callback: RequestCallback<List<Post>>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val posts = Database.posts[userUUID]
@@ -47,18 +34,18 @@ class ProfileFakeDataSource : ProfileDataSource {
         }, 2000)
     }
 
-    override fun updatePhoto(userUUID: String, photoUri: Uri, callback: RequestCallback<Photo>) {
+    override fun updatePhoto(userUUID: String, photoUri: Uri, callback: RequestCallback<Uri>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.sessionAuth
 
             if (userAuth == null) {
                 callback.onFailure("User not found")
-            } else {
-                val photo = Photo(userUUID, photoUri)
-                Database.photo[userUUID] = photo
-
-                callback.onSuccess(photo)
+                return@postDelayed
             }
+            Database.usersAuth.first { it.uuid == userUUID }.photoUri = photoUri
+            Database.sessionAuth?.photoUri = photoUri
+
+            callback.onSuccess(photoUri)
 
             callback.onComplete()
         }, 2000)

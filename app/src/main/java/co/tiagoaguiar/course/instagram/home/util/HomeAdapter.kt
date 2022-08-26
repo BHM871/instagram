@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
@@ -32,28 +33,28 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeHolder>() {
 
     inner class HomeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        private lateinit var imgProfile: CircleImageView
-        private lateinit var imgPost: ImageView
-
-        private lateinit var imgLike: ImageView
-        private lateinit var iconLike: ImageView
-
         fun bind(post: Post) = with(itemView) {
-            imgProfile = findViewById(R.id.item_home_img_user)
-            imgPost = findViewById(R.id.item_home_img_post)
-            imgLike = findViewById(R.id.item_home_img_heart)
-            iconLike = findViewById(R.id.item_home_container_img_like)
+            val imgProfile = findViewById<CircleImageView>(R.id.item_home_img_user)
 
-            imgPost.setImageResource(R.drawable.ic_insta_add)
-            iconLike.isActivated = false
+            val imgPost = findViewById<ImageView>(R.id.item_home_img_post)
+            val imgLike = findViewById<ImageView>(R.id.item_home_img_heart)
+            val iconLike = findViewById<ImageView>(R.id.item_home_container_img_like)
 
-            val a = ContextCompat.getDrawable(context, R.color.like)
-            iconLike.background = a
+            val txtUser = findViewById<TextView>(R.id.item_home_txt_username)
+            val txtDesc = findViewById<TextView>(R.id.item_home_txt_caption)
+
+            imgProfile.setImageURI(post.publisher.photoUri)
+
+            imgPost.setImageURI(post.uri)
+
+            txtUser.text = post.publisher.username
+            txtDesc.text = post.description
+            if (post.description != "")
+                txtDesc.visibility = View.VISIBLE
 
             val listViews = hashMapOf<String, View>()
             listViews["imgLike"] = imgLike
             listViews["iconLike"] = iconLike
-
 
             imgPost.setOnClickListener {
                 listener?.invoke(post, it, listViews)

@@ -12,26 +12,9 @@ class HomeFakeDataSource : HomeDataSource {
 
     override fun fetchFeed(userUUId: String, callback: RequestCallback<List<Post>>) {
         Handler(Looper.getMainLooper()).postDelayed({
-            val posts = Database.posts[userUUId]
+            val feed = Database.feed[userUUId]
 
-            val list = mutableListOf<Post>()
-            for (i in 0 until 30) {
-                Database.sessionAuth?.let {
-                    list.add(
-                        i,
-                        Post(
-                            "$i",
-                            Uri.EMPTY,
-                            "username",
-                            1202L,
-                            it
-                        )
-                    )
-                }
-            }
-
-            callback.onSuccess(list)
-            //callback.onSuccess(posts?.toList() ?: emptyList())
+            callback.onSuccess(feed?.toList() ?: emptyList())
 
             callback.onComplete()
         }, 2000)

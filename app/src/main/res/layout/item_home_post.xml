@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/item_search_txt_name"
+        android:id="@+id/item_home_txt_username"
         style="@style/Theme.Instagram.TextViewBase"
         android:layout_margin="8dp"
         android:padding="1dp"
@@ -60,7 +60,7 @@
         android:alpha="0"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_insta_heart"
+        android:src="@drawable/ic_heart_like"
         app:layout_constraintBottom_toBottomOf="@+id/item_home_img_post"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintEnd_toEndOf="parent"
@@ -82,7 +82,7 @@
             android:id="@+id/item_home_container_img_like"
             style="@style/Theme.Instagram.Icon"
             android:contentDescription="@null"
-            android:src="@drawable/ic_insta_heart" />
+            android:src="@drawable/like" />
 
         <ImageView
             android:id="@+id/item_home_container_img_comment"
@@ -108,15 +108,16 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/item_home_txt_comments"
+        android:id="@+id/item_home_txt_caption"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:ellipsize="end"
         android:maxLines="3"
         android:padding="2dp"
-        android:text="@string/comments"
         android:textColor="@color/black"
+        android:visibility="gone"
+        tools:visibility="visible"
         app:layout_constraintTop_toBottomOf="@+id/item_home_container_LCS_users"
         tools:text="Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment " />
 
@@ -130,5 +131,5 @@
         android:padding="2dp"
         android:text="@string/see_more"
         android:textColor="@color/gray_text"
-        app:layout_constraintTop_toBottomOf="@+id/item_home_txt_comments" />
+        app:layout_constraintTop_toBottomOf="@+id/item_home_txt_caption" />
 </androidx.constraintlayout.widget.ConstraintLayout>

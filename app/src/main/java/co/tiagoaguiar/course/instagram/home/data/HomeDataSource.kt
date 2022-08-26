@@ -10,5 +10,6 @@ interface HomeDataSource {
 
     fun fetchSession() : UserAuth { throw UnsupportedOperationException("User not found") }
     fun putFeed(response: List<Post>) { throw UnsupportedOperationException("User not found") }
+    fun removeCache() { throw UnsupportedOperationException("User not found") }
 
 }
