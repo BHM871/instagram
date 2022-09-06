@@ -34,4 +34,8 @@ class HomeLocalDataSource(
         homeFeedCache.remove()
     }
 
+    override fun liked(post: Post, liked: Boolean) {
+        (homeFeedCache as HomeFeedCache).like(post.uuid, liked)
+    }
+
 }

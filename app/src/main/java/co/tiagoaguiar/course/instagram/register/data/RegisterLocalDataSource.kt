@@ -5,14 +5,14 @@ import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class RegisterLocalDataSource(
-    private val userCache: Cache<UserAuth>,
+    private val userCache: Cache<Pair<UserAuth, Boolean?>>,
 ) : RegisterDataSource {
 
     override fun fetchSession(): UserAuth {
         return Database.sessionAuth ?: throw RuntimeException("user not found")
     }
 
-    override fun putNewUser(response: UserAuth) {
+    override fun putNewUser(response: Pair<UserAuth, Boolean?>) {
         userCache.put(response)
     }
 

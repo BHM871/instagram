@@ -9,7 +9,7 @@ import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import java.util.*
 
-class AddFakeRemoteDtaSource : AddDataSource {
+class AddFakeDataSource : AddDataSource {
 
     override fun createPost(
         userUUID: String,
@@ -27,9 +27,8 @@ class AddFakeRemoteDtaSource : AddDataSource {
             }
 
             val post = Post(UUID.randomUUID().toString(), uri, caption, System.currentTimeMillis(), Database.sessionAuth!!)
-            Database.posts[userUUID]?.add(post)
-            Database.usersAuth.firstOrNull { it.uuid == userUUID }?.postCount =
-                Database.usersAuth.firstOrNull { it.uuid == userUUID }?.postCount?.plus(1)!!
+            Database.posts[Database.sessionAuth!!.uuid]?.add(post)
+            Database.usersAuth.firstOrNull{ it.uuid == Database.sessionAuth!!.uuid }!!.postCount += 1
 
             var followers = Database.followers[userUUID]
 
@@ -39,15 +38,24 @@ class AddFakeRemoteDtaSource : AddDataSource {
             }
 
             for (follower in followers){
+                if (Database.feed[follower] == null)
+                    Database.feed[follower] = mutableSetOf()
                 Database.feed[follower]?.add(post)
             }
 
-            Database.feed[userUUID]?.add(post)
+            var feed = Database.feed[userUUID]
+
+            if (feed == null){
+                feed = mutableSetOf()
+                Database.feed[userUUID] = feed
+            }
+
+            feed.add(post)
 
             callback.onSuccess(true)
 
             callback.onComplete()
-        }, 1000)
+        }, 500)
     }
 
     override fun fetchSession(): UserAuth {

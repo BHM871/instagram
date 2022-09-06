@@ -6,10 +6,12 @@ import android.net.Uri
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
@@ -18,21 +20,32 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
 import co.tiagoaguiar.course.instagram.common.view.PostZoom
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainProfileBinding
+import co.tiagoaguiar.course.instagram.main.AttachListenerLogout
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
+import co.tiagoaguiar.course.instagram.main.view.MainActivity
 import co.tiagoaguiar.course.instagram.profile.Profile
 import co.tiagoaguiar.course.instagram.profile.util.ProfileAdapter
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Presenter>(
     R.layout.fragment_main_profile,
     FragmentMainProfileBinding::bind
-), Profile.View {
+), Profile.View, BottomNavigationView.OnNavigationItemSelectedListener {
+
+    companion object {
+        const val KEY_USER_ID = "key_user_id"
+    }
 
     override lateinit var presenter: Profile.Presenter
 
     private var attachListenerPhoto: AttachListenerPhoto? = null
     private var currentPhoto: Uri? = null
 
-    private lateinit var adapter: ProfileAdapter
+    private var logout: AttachListenerLogout? = null
+
+    private val adapter by lazy { ProfileAdapter(onLongClickItem) }
+
+    private var uuid: String? = null
 
     override fun setupPresenter() {
         presenter = DependencyInjector.mainProfilePresenter(this)
@@ -42,24 +55,47 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         binding?.let { binding ->
             with(binding) {
 
-                adapter = ProfileAdapter()
-                adapter.setListener(onLongClicktem)
+                uuid = arguments?.getString(KEY_USER_ID)
 
-                profileRecycler.layoutManager =
-                    GridLayoutManager(requireContext(), 3)
+                menuProfileNav.selectedItemId = R.id.menu_profile_grid
+
+                menuProfileNav.setOnNavigationItemSelectedListener(this@ProfileFragment)
+
+                profileRecycler.layoutManager = GridLayoutManager(requireContext(), 3)
                 profileRecycler.adapter = adapter
 
                 profileIncludeProfile.profileImgIcon.setOnClickListener {
-                    openDialog()
+                    if (uuid == null) openDialog()
                 }
 
-                presenter.fetchUserProfile()
+                profileIncludeProfile.profileBtnEditProfile.setOnClickListener {
+                    if (it.tag == true) {
+                        profileIncludeProfile.profileBtnEditProfile.text = getString(R.string.follow)
+                        profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
+                            ContextCompat.getColorStateList(requireContext(), R.color.blue_enabled)
+                        it.tag = false
+
+                        presenter.followUser(uuid, false)
+                    } else if (it.tag == false) {
+                        profileIncludeProfile.profileBtnEditProfile.text = getString(R.string.unfollow)
+                        profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
+                            ContextCompat.getColorStateList(requireContext(), R.color.white)
+                        it.tag = true
+
+                        presenter.followUser(uuid, true)
+                    }
+                }
+
+                if (uuid != null) profileIncludeProfile.profileImgAdd.visibility =
+                    View.GONE
+
+                presenter.fetchUserProfile(uuid)
 
             }
         }
     }
 
-    override fun getMenu() = R.menu.menu_profile
+    override fun getMenu() = R.menu.menu_defaut
 
     override fun getFragmentResult() {
         setFragmentResultListener("cropKey") { _, bundle ->
@@ -70,7 +106,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> {
                 setFragmentResult("addScreen", bundleOf("screen" to "camera"))
                 attachListenerPhoto?.goToFragmentCamera()
@@ -78,6 +114,9 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
             R.id.menu_add -> {
                 setFragmentResult("addScreen", bundleOf("screen" to "gallery"))
                 attachListenerPhoto?.gotoFragmentGallery()
+            }
+            R.id.menu_logout -> {
+                logout?.goToLoginLogout()
             }
         }
         return false
@@ -87,7 +126,9 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         binding?.profileProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
-    override fun displayUserProfile(userAuth: UserAuth) {
+    override fun displayUserProfile(user: Pair<UserAuth, Boolean?>) {
+        val (userAuth, following) = user
+
         binding?.let { binding ->
             with(binding) {
                 profileIncludeProfile.profileTxtUsername.text = userAuth.username
@@ -96,11 +137,23 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                     userAuth.followingCount.toString()
                 profileIncludeProfile.profileTxtFollowersCount.text =
                     userAuth.followersCount.toString()
-
-                presenter.fetchUserPosts()
-
                 profileIncludeProfile.profileImgIcon.setImageURI(userAuth.photoUri)
-                if (userAuth.photoUri != null) profileIncludeProfile.profileImgAdd.visibility = View.GONE
+                if (userAuth.photoUri != null) profileIncludeProfile.profileImgAdd.visibility =
+                    View.GONE
+
+                profileIncludeProfile.profileBtnEditProfile.text = when (following) {
+                    null -> getString(R.string.edit_profile)
+                    true -> getString(R.string.unfollow)
+                    false -> {
+                        profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
+                            ContextCompat.getColorStateList(requireContext(), R.color.blue_enabled)
+                        getString(R.string.follow)
+                    }
+                }
+
+                profileIncludeProfile.profileBtnEditProfile.tag = following
+
+                presenter.fetchUserPosts(uuid)
             }
         }
     }
@@ -138,32 +191,51 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         adapter.notifyDataSetChanged()
     }
 
+    override fun follow(isFollow: Boolean) {
+        if (isFollow){
+            (requireActivity() as MainActivity).onPostCreated()
+        }
+    }
+
     private fun openDialog() {
         attachListenerPhoto?.openDialogForPhoto()
     }
 
-    private val onLongClicktem = object : (Post) -> Unit {
-        override fun invoke(post: Post) {
-            PostZoom(requireContext()).apply{
-                setImageProfile(post.publisher.photoUri ?: Uri.EMPTY)
-                setTitle(post.publisher.username)
-                setImage(post.uri)
-                setCaption(post.description)
-                show()
-            }
+    @SuppressLint("NewApi")
+    private val onLongClickItem: (Post) -> Unit = { post: Post ->
+        PostZoom(requireContext()).apply {
+            setImageProfile(post.publisher.photoUri ?: Uri.EMPTY)
+            setTitle(post.publisher.username)
+            setImage(post.uri)
+            setCaption(post.description)
+            show()
         }
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is AttachListenerPhoto) {
+        if (context is AttachListenerPhoto)
             attachListenerPhoto = context
-        }
+
+        if (context is AttachListenerLogout)
+            logout = context
+
     }
 
     override fun onDestroy() {
         attachListenerPhoto = null
+        logout = null
         super.onDestroy()
+    }
+
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_profile_grid ->
+                binding?.profileRecycler?.layoutManager = GridLayoutManager(requireContext(), 3)
+            R.id.menu_profile_videos ->
+                binding?.profileRecycler?.layoutManager = LinearLayoutManager(requireContext())
+        }
+        return true
     }
 
 }

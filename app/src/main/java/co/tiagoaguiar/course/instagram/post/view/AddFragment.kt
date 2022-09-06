@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -31,7 +32,6 @@ class AddFragment : Fragment(R.layout.fragment_main_add) {
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var adapter: AddViewPageAdapter
-    private var openTab: Int? = null
 
     companion object {
         private val REQUIRED_PERMISSIONS = arrayOf(
@@ -43,8 +43,8 @@ class AddFragment : Fragment(R.layout.fragment_main_add) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        setFragmentResultListener("takeCameraKey") { _, bundle ->
-            val uri = bundle.getParcelable<Uri>("takeUri")
+        setFragmentResultListener("uriKey") { _, bundle ->
+            val uri = bundle.getParcelable<Uri>("uri")
             uri?.let {
                 val intent = Intent(requireContext(), AddActivity::class.java)
                 intent.putExtra("photoUri", uri)
@@ -101,7 +101,7 @@ class AddFragment : Fragment(R.layout.fragment_main_add) {
     }
 
     private val getPermission =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { _ ->
             if (allPermissionsGranted()) {
                 starCamera()
             } else {

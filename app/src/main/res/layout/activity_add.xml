@@ -34,7 +34,7 @@
             android:id="@+id/add_edit_caption"
             style="@style/Theme.Instagram.EditTextForm"
             android:layout_width="match_parent"
-            android:inputType="textPersonName"
+            android:inputType="textCapSentences"
             android:layout_height="64dp"
             android:hint="@string/write_caption" />
 

@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/zoom_img_profile"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="8dp"
         android:src="@drawable/ic_insta_profile_thin"
@@ -23,35 +23,36 @@
         android:maxLines="3"
         android:textAlignment="textStart"
         app:layout_constraintBottom_toBottomOf="@id/zoom_img_profile"
+        app:layout_constraintEnd_toEndOf="@+id/zoom_img_photo"
         app:layout_constraintStart_toEndOf="@id/zoom_img_profile"
         app:layout_constraintTop_toTopOf="@id/zoom_img_profile"
-        tools:text="@string/write_caption" />
+        tools:text="@string/username" />
 
     <ImageView
         android:id="@+id/zoom_img_photo"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:background="@color/black"
         app:layout_constraintDimensionRatio="1:1"
         app:layout_constraintTop_toBottomOf="@+id/zoom_img_profile"
         tools:src="@drawable/ic_insta_profile" />
 
     <TextView
         android:id="@+id/zoom_txt_desc"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="18dp"
         android:layout_marginTop="10dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginBottom="10dp"
-        android:maxLines="3"
-        android:textColor="@color/gray_text"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/black"
         android:textSize="16sp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/zoom_img_photo"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/zoom_img_photo"
-        tools:text="@string/write_caption"
-        tools:visibility="visible" />
-
+        tools:text="@string/write_caption" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,7 +2,7 @@ package co.tiagoaguiar.course.instagram.common.base
 
 import android.content.Context
 import co.tiagoaguiar.course.instagram.add.Add
-import co.tiagoaguiar.course.instagram.add.data.AddFakeRemoteDtaSource
+import co.tiagoaguiar.course.instagram.add.data.AddFakeDataSource
 import co.tiagoaguiar.course.instagram.add.data.AddLocalDataSource
 import co.tiagoaguiar.course.instagram.add.data.AddRepository
 import co.tiagoaguiar.course.instagram.add.presenter.AddPresenter
@@ -17,6 +17,10 @@ import co.tiagoaguiar.course.instagram.login.Login
 import co.tiagoaguiar.course.instagram.login.data.LoginFakeDataSource
 import co.tiagoaguiar.course.instagram.login.data.LoginRepository
 import co.tiagoaguiar.course.instagram.login.presentation.LoginPresenter
+import co.tiagoaguiar.course.instagram.main.Main
+import co.tiagoaguiar.course.instagram.main.data.MainFakeDataSource
+import co.tiagoaguiar.course.instagram.main.data.MainRepository
+import co.tiagoaguiar.course.instagram.main.presenter.MainPresenter
 import co.tiagoaguiar.course.instagram.post.Post
 import co.tiagoaguiar.course.instagram.post.data.PostLocalDataSource
 import co.tiagoaguiar.course.instagram.post.data.PostRepository
@@ -34,6 +38,10 @@ import co.tiagoaguiar.course.instagram.register.data.RegisterRepository
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterEmailPresenter
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterNamePasswordPresenter
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterPhotoPresenter
+import co.tiagoaguiar.course.instagram.search.Search
+import co.tiagoaguiar.course.instagram.search.data.SearchFakeDataSource
+import co.tiagoaguiar.course.instagram.search.data.SearchRepository
+import co.tiagoaguiar.course.instagram.search.presenter.SearchPresenter
 import co.tiagoaguiar.course.instagram.splash.SplashScreen
 import co.tiagoaguiar.course.instagram.splash.data.SplashFakeDataSource
 import co.tiagoaguiar.course.instagram.splash.data.SplashRepository
@@ -90,7 +98,7 @@ object DependencyInjector {
     }
 
     private fun mainAddRepository() : AddRepository {
-        return AddRepository(AddLocalDataSource(), AddFakeRemoteDtaSource())
+        return AddRepository(AddLocalDataSource(), AddFakeDataSource())
     }
 
     fun mainAddPresenter(view: Add.View) : Add.Presenter {
@@ -103,6 +111,22 @@ object DependencyInjector {
 
     fun postPresenter(view: Post.View, context: Context) : Post.Presenter{
         return PostPresenter(view, postRepository(context))
+    }
+
+    private fun searchRepository() : SearchRepository {
+        return SearchRepository(SearchFakeDataSource())
+    }
+
+    fun searchPresenter(view: Search.View) : Search.Presenter {
+        return SearchPresenter(view, searchRepository())
+    }
+
+    private fun mainRepository() : MainRepository {
+        return MainRepository(MainFakeDataSource())
+    }
+
+    fun mainPresenter(view: Main.View): Main.Presenter {
+        return MainPresenter(view, mainRepository())
     }
 
 }

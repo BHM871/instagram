@@ -2,6 +2,8 @@ package co.tiagoaguiar.course.instagram.post.view
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.util.Size
 import android.view.View
@@ -24,6 +26,8 @@ class CameraFragment : Fragment(R.layout.fragment_main_camera) {
 
     private var binding: FragmentMainCameraBinding? = null
 
+    private var cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+
     private lateinit var previewView: PreviewView
     private var imgCapture: ImageCapture? = null
 
@@ -41,8 +45,24 @@ class CameraFragment : Fragment(R.layout.fragment_main_camera) {
         binding = FragmentMainCameraBinding.bind(view)
 
         previewView = binding?.previewViewCamera!!
+
+        binding?.cameraBtnCameraSelector?.setOnClickListener {
+            if (cameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+                cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA
+                starCamera()
+            }
+            else {
+                cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+                starCamera()
+            }
+        }
+
         binding?.cameraBtnCapture?.setOnClickListener {
+            it.isEnabled = false
             takePhoto()
+            Handler(Looper.getMainLooper()).postDelayed({
+                it.isEnabled = true
+            }, 1500)
         }
     }
 
@@ -55,7 +75,7 @@ class CameraFragment : Fragment(R.layout.fragment_main_camera) {
         imgCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(requireContext()), object : ImageCapture.OnImageSavedCallback {
             override fun onImageSaved(outputFileResults: ImageCapture.OutputFileResults) {
                 val savedUri = Uri.fromFile(photoFile)
-                setFragmentResult("takeCameraKey", bundleOf("takeUri" to savedUri))
+                setFragmentResult("uriKey", bundleOf("uri" to savedUri))
             }
 
             override fun onError(exception: ImageCaptureException) {
@@ -75,8 +95,6 @@ class CameraFragment : Fragment(R.layout.fragment_main_camera) {
                 .also {
                     it.setSurfaceProvider(previewView.surfaceProvider)
                 }
-
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
 
             imgCapture = ImageCapture.Builder()
                 .setTargetResolution(Size(480, 480))

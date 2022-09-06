@@ -14,10 +14,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
+import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.Post
+import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainHomeBinding
 import co.tiagoaguiar.course.instagram.home.Home
 import co.tiagoaguiar.course.instagram.home.util.HomeAdapter
+import co.tiagoaguiar.course.instagram.main.AttachListenerLogout
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 
 @SuppressLint("ResourceType")
@@ -29,24 +32,39 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
     override lateinit var presenter: Home.Presenter
 
     private var attachListenerPhoto: AttachListenerPhoto? = null
-    private var adapter = HomeAdapter()
+    private val storyAdapter = HomeAdapter<UserAuth>()
+
+    private var logout: AttachListenerLogout? = null
+
+    private val homeAdapter by lazy { HomeAdapter<Post>(onClickItemPost) }
 
     override fun setupPresenter() {
         presenter = DependencyInjector.mainHomePresenter(this)
     }
 
     override fun setupViews() {
-        adapter.setListener(onClickItem)
-        binding?.homeRecycler?.layoutManager = LinearLayoutManager(requireContext())
-        binding?.homeRecycler?.adapter = adapter
+        binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryImg?.setImageURI(Database.sessionAuth?.photoUri)
+        binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryTxt?.text =
+            getText(R.string.your_story)
+        val list: MutableList<UserAuth> =
+            Database.usersAuth.filter { it.name != Database.sessionAuth!!.name } as MutableList<UserAuth>
+        storyAdapter.list = list
+
+        binding?.homeRecyclerStory?.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding?.homeRecyclerStory?.adapter = storyAdapter
+
+        binding?.homeRecyclerFeed?.layoutManager =
+            LinearLayoutManager(requireContext())
+        binding?.homeRecyclerFeed?.adapter = homeAdapter
 
         presenter.fetchFeed()
     }
 
-    override fun getMenu() = R.menu.menu_profile
+    override fun getMenu() = R.menu.menu_defaut
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        when (item.itemId) {
             android.R.id.home -> {
                 setFragmentResult("addScreen", bundleOf("screen" to "camera"))
                 attachListenerPhoto?.goToFragmentCamera()
@@ -54,6 +72,9 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
             R.id.menu_add -> {
                 setFragmentResult("addScreen", bundleOf("screen" to "gallery"))
                 attachListenerPhoto?.gotoFragmentGallery()
+            }
+            R.id.menu_logout -> {
+                logout?.goToLoginLogout()
             }
         }
         return false
@@ -68,28 +89,27 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
     }
 
     override fun displayEmptyFeed() {
-        binding?.homeRecycler?.visibility = View.GONE
+        binding?.homeRecyclerFeed?.visibility = View.GONE
         binding?.profileTxtEmptyList?.visibility = View.VISIBLE
     }
 
     @SuppressLint("NotifyDataSetChanged")
     override fun displayFullFeed(posts: List<Post>) {
-        binding?.homeRecycler?.visibility = View.VISIBLE
-        adapter.list = posts
-        adapter.notifyDataSetChanged()
+        binding?.homeRecyclerFeed?.visibility = View.VISIBLE
+        homeAdapter.list = posts
+        homeAdapter.notifyDataSetChanged()
     }
 
-    private val onClickItem = object : (Post, View, HashMap<String, View>) -> Unit {
-        override fun invoke(post: Post, clivkView: View, views: HashMap<String, View>) {
+    private val onClickItemPost: (Post, View, HashMap<String, View>) -> Unit =
+        { post: Post, viewClicked: View, views: HashMap<String, View> ->
             val imgLike = (views["imgLike"] as ImageView)
             val iconLike = (views["iconLike"] as ImageView)
 
-            when(clivkView.id) {
+            when (viewClicked.id) {
                 R.id.item_home_img_post -> onDoubleClickItem(post, imgLike, iconLike)
-                R.id.item_home_container_img_like -> like(imgLike, iconLike)
+                R.id.item_home_container_img_like -> like(post, imgLike, iconLike)
             }
         }
-    }
 
     private fun onDoubleClickItem(post: Post, imgLike: ImageView, iconLike: ImageView) {
         post.countClick++
@@ -101,6 +121,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
             }
 
             iconLike.isSelected = !iconLike.isSelected
+            presenter.liked(post, iconLike.isSelected)
 
             Handler(Looper.getMainLooper()).postDelayed({
                 imgLike.animate().apply {
@@ -115,7 +136,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         }, 200)
     }
 
-    private fun like(imgLike: ImageView, iconLike: ImageView) {
+    private fun like(post: Post, imgLike: ImageView, iconLike: ImageView) {
         imgLike.animate().apply {
             duration = 250
             alpha(1.0f)
@@ -123,6 +144,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         }
 
         iconLike.isSelected = !iconLike.isSelected
+        presenter.liked(post, iconLike.isSelected)
 
         Handler(Looper.getMainLooper()).postDelayed({
             imgLike.animate().apply {
@@ -138,10 +160,14 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
         if (context is AttachListenerPhoto)
             attachListenerPhoto = context
+
+        if (context is AttachListenerLogout)
+            logout = context
     }
 
     override fun onDestroy() {
         attachListenerPhoto = null
+        logout = null
         super.onDestroy()
     }
 }

@@ -7,7 +7,7 @@ import co.tiagoaguiar.course.instagram.common.util.UserCache
 
 class AddRepository(
     private val localDataSource: AddLocalDataSource,
-    private val remoteDataSource: AddFakeRemoteDtaSource
+    private val remoteDataSource: AddFakeDataSource
 ) {
 
     fun createPost(uri: Uri, caption: String, callback: RequestCallback<Boolean>) {

@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
@@ -40,8 +41,12 @@ class PictureAdapter : RecyclerView.Adapter<PictureAdapter.PictureHolder>() {
             val img = findViewById<ImageView>(R.id.item_profile_img_grid)
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val bitmap = context.contentResolver.loadThumbnail(picture, Size(200, 200), null)
+            try {
+                val bitmap = context.contentResolver.loadThumbnail(picture, Size(200, 200), null)
                 img.setImageBitmap(bitmap)
+            } catch (e: Exception){
+                Toast.makeText(context, e.message, Toast.LENGTH_SHORT).show()
+            }
 
                 img.setOnClickListener {
                     listener?.invoke(picture)

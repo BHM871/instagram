@@ -3,23 +3,23 @@ package co.tiagoaguiar.course.instagram.common.util
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
-object UserCache : Cache<UserAuth> {
+object UserCache : Cache<Pair<UserAuth, Boolean?>> {
 
-    var userAuth: UserAuth? = null
+    var userAuth: Pair<UserAuth, Boolean?>? = null
 
     override fun isCached(): Boolean {
         return userAuth != null
     }
 
-    override fun get(key: String): UserAuth? {
-        return if (userAuth?.uuid == key){
+    override fun get(key: String): Pair<UserAuth, Boolean?>? {
+        return if (userAuth?.first?.uuid == key){
             userAuth
         } else {
             null
         }
     }
 
-    override fun put(data: UserAuth) {
+    override fun put(data: Pair<UserAuth, Boolean?>) {
         userAuth = data
     }
 

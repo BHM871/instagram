@@ -26,6 +26,6 @@ class LoginFakeDataSource : LoginDataSource {
 
             callback.onComplete()
 
-        }, 2000)
+        }, 1000)
     }
 }

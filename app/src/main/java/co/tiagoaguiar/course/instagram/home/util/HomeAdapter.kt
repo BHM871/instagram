@@ -5,35 +5,42 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.model.Post
+import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import de.hdodenhof.circleimageview.CircleImageView
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeHolder>() {
+class HomeAdapter<T>(
+    private val listenerPost: ((Post, View, HashMap<String, View>) -> Unit)? = null
+) : RecyclerView.Adapter<HomeAdapter<T>.HomeHolder>() {
 
-    var list: List<Post> = mutableListOf()
-    private var listener: ((Post, View, HashMap<String, View>) -> Unit)? = null
+    var list: List<T> = mutableListOf()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeHolder =
-        HomeHolder(
-            LayoutInflater.from(parent.context).inflate(R.layout.item_home_post, parent, false)
-        )
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HomeHolder {
+        return try {
+            val item = list.first() as Post
+            HomeHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_home_post, parent, false))
+        } catch (e: Exception) {
+            HomeHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_home_story, parent, false))
+        }
+    }
 
     override fun onBindViewHolder(holder: HomeHolder, position: Int) {
-        holder.bind(list[position])
+        try {
+            val item = list[position] as Post
+            holder.bindPost(list[position])
+        } catch (e: Exception){
+            holder.bindStory(list[position])
+        }
     }
 
     override fun getItemCount(): Int = list.size
 
-    fun setListener(listener: (Post, View, HashMap<String, View>) -> Unit) {
-        this.listener = listener
-    }
-
     inner class HomeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        fun bind(post: Post) = with(itemView) {
+        fun bindPost(post: T) = with(itemView) {
+            post as Post
             val imgProfile = findViewById<CircleImageView>(R.id.item_home_img_user)
 
             val imgPost = findViewById<ImageView>(R.id.item_home_img_post)
@@ -46,6 +53,7 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeHolder>() {
             imgProfile.setImageURI(post.publisher.photoUri)
 
             imgPost.setImageURI(post.uri)
+            iconLike.isSelected = post.like
 
             txtUser.text = post.publisher.username
             txtDesc.text = post.description
@@ -57,11 +65,20 @@ class HomeAdapter : RecyclerView.Adapter<HomeAdapter.HomeHolder>() {
             listViews["iconLike"] = iconLike
 
             imgPost.setOnClickListener {
-                listener?.invoke(post, it, listViews)
+                listenerPost?.invoke(post, it, listViews)
             }
             iconLike.setOnClickListener {
-                listener?.invoke(post, it, listViews)
+                listenerPost?.invoke(post, it, listViews)
             }
+        }
+
+        fun bindStory(user: T) = with(itemView) {
+            user as UserAuth
+            val img = findViewById<CircleImageView>(R.id.item_home_story_img)
+            val txt = findViewById<TextView>(R.id.item_home_story_txt)
+
+            img.setImageURI(user.photoUri)
+            txt.text = user.username
         }
 
     }

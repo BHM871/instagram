@@ -8,7 +8,6 @@ object HomeFeedCache : Cache<List<Post>> {
     var feed: List<Post>? = null
 
     override fun isCached(): Boolean {
-        if (feed == null) feed = null
         return feed != null
     }
 
@@ -22,5 +21,9 @@ object HomeFeedCache : Cache<List<Post>> {
 
     override fun remove() {
         feed = null
+    }
+
+    fun like(uuid: String, liked: Boolean){
+        feed?.first { it.uuid == uuid }?.like = liked
     }
 }

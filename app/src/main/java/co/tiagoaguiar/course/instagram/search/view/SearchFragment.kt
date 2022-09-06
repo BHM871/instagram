@@ -1,47 +1,73 @@
 package co.tiagoaguiar.course.instagram.search.view
 
+import android.annotation.SuppressLint
+import android.app.SearchManager
 import android.content.Context
-import android.os.Bundle
-import android.view.*
-import android.widget.ImageView
-import androidx.core.content.ContextCompat
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
+import androidx.appcompat.widget.SearchView
 import androidx.core.os.bundleOf
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
+import co.tiagoaguiar.course.instagram.common.base.BaseFragment
+import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
+import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainSearchBinding
-import co.tiagoaguiar.course.instagram.databinding.ItemSearchUsersBinding
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
-import de.hdodenhof.circleimageview.CircleImageView
+import co.tiagoaguiar.course.instagram.search.Search
+import co.tiagoaguiar.course.instagram.search.utiil.SearchAdapter
 
-class SearchFragment : Fragment(R.layout.fragment_main_search) {
+class SearchFragment : BaseFragment<FragmentMainSearchBinding, Search.Presenter>(
+    R.layout.fragment_main_search,
+    FragmentMainSearchBinding::bind
+), Search.View {
 
-    private var binding: FragmentMainSearchBinding? = null
+    override lateinit var presenter: Search.Presenter
 
     private var attachListenerPhoto: AttachListenerPhoto? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setHasOptionsMenu(true)
+    private val adapter by lazy { SearchAdapter(onClickItem) }
+
+    private var searchListener: SearchListener? = null
+
+    override fun setupPresenter() {
+        presenter = DependencyInjector.searchPresenter(this)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_profile, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = FragmentMainSearchBinding.bind(view)
-
+    override fun setupViews() {
         binding?.let { binding ->
             with(binding) {
                 searchRecycler.layoutManager = LinearLayoutManager(requireContext())
-                searchRecycler.adapter = SearchAdapter()
+                searchRecycler.adapter = adapter
             }
+        }
+    }
+
+    override fun getMenu(): Int = R.menu.menu_seach
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+
+        val serviceManager = requireActivity().getSystemService(Context.SEARCH_SERVICE) as SearchManager
+        val searchView = menu.findItem(R.id.menu_users_search).actionView as SearchView
+
+        searchView.apply {
+            setSearchableInfo(serviceManager.getSearchableInfo(requireActivity().componentName))
+            setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText != null){
+                        presenter.fetchUsers(newText)
+                    }
+                    return false
+                }
+            })
         }
     }
 
@@ -59,30 +85,30 @@ class SearchFragment : Fragment(R.layout.fragment_main_search) {
         return false
     }
 
-    private class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchHolder>() {
+    override fun showProgress(enabled: Boolean) {
+        binding?.searchProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
+    }
 
-        private var binding: ItemSearchUsersBinding? = null
-        private lateinit var context: Context
+    override fun displayEmptyUsers() {
+        binding?.searchTxtEmptyList?.visibility = View.VISIBLE
+        binding?.searchRecycler?.visibility = View.GONE
+    }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchHolder{
-            context = parent.context
-            return SearchHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_search_users, parent, false))
-        }
+    @SuppressLint("NotifyDataSetChanged")
+    override fun displayFullUsers(users: List<UserAuth>) {
+        binding?.searchTxtEmptyList?.visibility = View.GONE
+        binding?.searchRecycler?.visibility = View.VISIBLE
+        adapter.list.clear()
+        adapter.list.addAll(users)
+        adapter.notifyDataSetChanged()
+    }
 
-        override fun onBindViewHolder(holder: SearchHolder, position: Int) {
-            holder.bind(R.drawable.ic_insta_add)
-        }
+    private val onClickItem: (String) -> Unit = { uuid ->
+        searchListener?.goToProfile(uuid)
+    }
 
-        override fun getItemCount(): Int = 10
-
-        private inner class SearchHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-            fun bind(image: Int) {
-                itemView.findViewById<CircleImageView>(R.id.item_search_img_user).setImageResource(image)
-            }
-
-        }
-
+    interface SearchListener {
+        fun goToProfile(uuid: String)
     }
 
     override fun onAttach(context: Context) {
@@ -90,11 +116,14 @@ class SearchFragment : Fragment(R.layout.fragment_main_search) {
 
         if (context is AttachListenerPhoto)
             attachListenerPhoto = context
+
+        if (context is SearchListener)
+            searchListener = context
     }
 
     override fun onDestroy() {
-        binding = null
         attachListenerPhoto = null
+        searchListener = null
         super.onDestroy()
     }
 

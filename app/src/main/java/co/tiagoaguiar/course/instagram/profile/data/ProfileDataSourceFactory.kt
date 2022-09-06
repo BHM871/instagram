@@ -5,7 +5,7 @@ import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileDataSourceFactory(
-    private val userCache: Cache<UserAuth>,
+    private val userCache: Cache<Pair<UserAuth, Boolean?>>,
     private val postCache: Cache<List<Post>>
 ) {
 
@@ -13,7 +13,14 @@ class ProfileDataSourceFactory(
         return ProfileLocalDataSource(userCache, postCache)
     }
 
-    fun createFromUser() : ProfileDataSource {
+    fun createRemoteDataSource() : ProfileFakeDataSource {
+        return ProfileFakeDataSource()
+    }
+
+    fun createFromUser(uuid: String?) : ProfileDataSource {
+        if (uuid != null)
+            return ProfileFakeDataSource()
+
         return if (userCache.isCached()){
             ProfileLocalDataSource(userCache, postCache)
         } else {
@@ -21,7 +28,10 @@ class ProfileDataSourceFactory(
         }
     }
 
-    fun createFromPosts() : ProfileDataSource {
+    fun createFromPosts(uuid: String?) : ProfileDataSource {
+        if (uuid != null)
+            return ProfileFakeDataSource()
+
         return if (postCache.isCached()){
             ProfileLocalDataSource(userCache, postCache)
         } else {

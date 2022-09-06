@@ -1,6 +1,5 @@
 package co.tiagoaguiar.course.instagram.common.model
 
-import android.content.SharedPreferences
 import java.util.*
 
 object Database {
@@ -8,27 +7,27 @@ object Database {
     val usersAuth = mutableListOf<UserAuth>()
     val posts = hashMapOf<String, MutableSet<Post>>()
     val feed = hashMapOf<String, MutableSet<Post>>()
-    val followers = hashMapOf<String, Set<String>>()
+    val followers = hashMapOf<String, MutableSet<String>>()
 
     var sessionAuth: UserAuth? = null
 
     init {
-        val userA = UserAuth(UUID.randomUUID().toString(), "UserA", "user_a", "userA@gmail.com", "12345678")
-        val userB = UserAuth(UUID.randomUUID().toString(), "UserB", "user_b", "userB@gmail.com", "87654321")
+        for (i in 0..26) {
+            usersAuth.add(
+                UserAuth(
+                    UUID.randomUUID().toString(),
+                    "User${(i + 65).toChar()}",
+                    "user_${(i + 97).toChar()}",
+                    "user${(i + 65).toChar()}@gmail.com",
+                    "$i$i$i$i$i$i$i$i"
+                )
+            )
 
-        usersAuth.add(userA)
-        usersAuth.add(userB)
+            posts[usersAuth[i].uuid] = mutableSetOf()
+            feed[usersAuth[i].uuid] = mutableSetOf()
+            followers[usersAuth[i].uuid] = mutableSetOf()
 
-        posts[userA.uuid] = mutableSetOf()
-        feed[userA.uuid] = mutableSetOf()
-        followers[userA.uuid] = mutableSetOf()
-
-        posts[userB.uuid] = mutableSetOf()
-        feed[userB.uuid] = mutableSetOf()
-        followers[userB.uuid] = mutableSetOf()
-
-
-        sessionAuth = usersAuth.first()
+        }
     }
 
 }

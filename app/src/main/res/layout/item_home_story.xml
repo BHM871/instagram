@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_margin="8dp"
+    android:orientation="vertical">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/item_home_story_img"
+        android:layout_width="58dp"
+        android:layout_height="58dp"
+        android:layout_gravity="center"
+        android:src="@drawable/ic_insta_profile_thin"
+        app:civ_circle_background_color="@color/gray_border" />
+
+    <TextView
+        android:id="@+id/item_home_story_txt"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="12sp"
+        tools:text="lkbfdçwslbflkdshgfiudwsv"
+        android:textAlignment="center"
+        android:textColor="@color/black" />
+
+</LinearLayout>

@@ -122,7 +122,7 @@
         tools:text="Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment Comment " />
 
     <TextView
-        android:id="@+id/item_search_txt_username"
+        android:id="@+id/item_home_txt_see_more"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="8dp"

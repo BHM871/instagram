@@ -19,7 +19,7 @@ class RegisterFakeDataSource : RegisterDataSource {
             }
 
             callback.onComplete()
-        }, 2000)
+        }, 1000)
     }
 
     override fun createUser(
@@ -27,7 +27,7 @@ class RegisterFakeDataSource : RegisterDataSource {
         name: String,
         username: String,
         password: String,
-        callback: RequestCallback<UserAuth>
+        callback: RequestCallback<Pair<UserAuth, Boolean?>>
     ) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.usersAuth.firstOrNull{it.email == email}
@@ -67,12 +67,12 @@ class RegisterFakeDataSource : RegisterDataSource {
                         Database.feed[newUser.uuid] = feed
                     }
 
-                    callback.onSuccess(Database.sessionAuth!!)
+                    callback.onSuccess(Pair(Database.sessionAuth!!, null))
                 }
             }
 
             callback.onComplete()
-        }, 2000)
+        }, 1000)
     }
 
     override fun updateUser(userUUID: String, photoUri: Uri, callback: RequestCallback<Uri?>) {
@@ -91,7 +91,7 @@ class RegisterFakeDataSource : RegisterDataSource {
             }
 
             callback.onComplete()
-        }, 2000)
+        }, 1000)
     }
 
 }

@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.databinding.PostZoomBinding
@@ -27,7 +29,7 @@ class PostZoom(context: Context) : Dialog(context) {
         setContentView(binding.root)
     }
 
-    fun setImageProfile(imageUri: Uri){
+    fun setImageProfile(imageUri: Uri) {
         this.imageProfile = imageUri
     }
 
@@ -35,7 +37,7 @@ class PostZoom(context: Context) : Dialog(context) {
         this.titleId = context.getString(titleId)
     }
 
-    fun setTitle(title: String){
+    fun setTitle(title: String) {
         this.titleId = title
     }
 
@@ -43,20 +45,20 @@ class PostZoom(context: Context) : Dialog(context) {
         this.imagePost = imageUri
     }
 
-    fun setCaption(captionId: Int){
+    fun setCaption(captionId: Int) {
         this.caption = context.getString(captionId)
     }
 
-    fun setCaption(caption: String){
+    fun setCaption(caption: String) {
         this.caption = caption
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     override fun show() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
         super.show()
 
         imageProfile?.let {
-            if (it != Uri.EMPTY){
+            if (it != Uri.EMPTY) {
                 binding.zoomImgProfile.setImageURI(it)
             }
         }
@@ -70,10 +72,7 @@ class PostZoom(context: Context) : Dialog(context) {
         }
 
         caption?.let {
-            if (it != "") {
-                binding.zoomTxtDesc.text = it
-                binding.zoomTxtDesc.visibility = View.VISIBLE
-            }
+            binding.zoomTxtDesc.text = it
         }
 
         window?.setBackgroundDrawableResource(R.drawable.dialog_custom_background)

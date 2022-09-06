@@ -14,10 +14,10 @@ class ProfilePresenter(
     private val repository: ProfileRepository
 ) : Profile.Presenter {
 
-    override fun fetchUserProfile() {
+    override fun fetchUserProfile(uuid: String?) {
         view?.showProgress(true)
-        repository.fetchUserProfile(object : RequestCallback<UserAuth> {
-            override fun onSuccess(data: UserAuth) {
+        repository.fetchUserProfile(uuid, object : RequestCallback<Pair<UserAuth, Boolean?>> {
+            override fun onSuccess(data: Pair<UserAuth, Boolean?>) {
                 view?.displayUserProfile(data)
             }
 
@@ -30,8 +30,8 @@ class ProfilePresenter(
         })
     }
 
-    override fun fetchUserPosts() {
-        repository.fetchUserPost(object : RequestCallback<List<Post>> {
+    override fun fetchUserPosts(uuid: String?) {
+        repository.fetchUserPost(uuid, object : RequestCallback<List<Post>> {
             override fun onSuccess(data: List<Post>) {
                 if (data.isEmpty()) {
                     view?.displayEmptyPosts()
@@ -64,6 +64,18 @@ class ProfilePresenter(
             override fun onComplete() {
                 view?.showProgress(false)
             }
+        })
+    }
+
+    override fun followUser(uuid: String?, follow: Boolean) {
+        repository.followUser(uuid, follow, object : RequestCallback<Boolean> {
+            override fun onSuccess(data: Boolean) {
+                view?.follow(data)
+            }
+
+            override fun onFailure(message: String) { }
+
+            override fun onComplete() { }
         })
     }
 

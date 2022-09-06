@@ -8,5 +8,6 @@ data class Post(
     val description: String,
     val timestamp: Long,
     val publisher: UserAuth,
-    var countClick: Int = 0
+    var countClick: Int = 0,
+    var like: Boolean = false
 )

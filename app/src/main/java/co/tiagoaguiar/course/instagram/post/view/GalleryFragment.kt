@@ -1,10 +1,12 @@
 package co.tiagoaguiar.course.instagram.post.view
 
 import android.annotation.SuppressLint
-import android.graphics.Bitmap
 import android.net.Uri
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
+import androidx.fragment.app.setFragmentResult
 import androidx.recyclerview.widget.GridLayoutManager
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
@@ -42,6 +44,20 @@ class GalleryFragment : BaseFragment<FragmentMainGalleryBinding, Post.Presenter>
         }
     }
 
+    override fun getMenu() = R.menu.menu_next
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_send -> {
+                presenter.getSelectedUri()?.let {
+                    setFragmentResult("uriKey", bundleOf("uri" to it))
+                }
+                true
+            }
+            else -> false
+        }
+    }
+
     override fun showProgress(enabled: Boolean) {
         binding?.galleryProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
     }
@@ -59,7 +75,8 @@ class GalleryFragment : BaseFragment<FragmentMainGalleryBinding, Post.Presenter>
         adapter.list = pictures
         adapter.notifyDataSetChanged()
 
-        binding?.galleryImgPhoto?.setImageURI(adapter.list[0])
+        binding?.galleryImgPhoto?.setImageURI(adapter.list.first())
+        presenter.selectedUri(adapter.list.first())
     }
 
     override fun displayRequestFailure(message: String) {
@@ -69,7 +86,8 @@ class GalleryFragment : BaseFragment<FragmentMainGalleryBinding, Post.Presenter>
     private val onClickItem = object : (Uri) -> Unit {
         override fun invoke(picture: Uri) {
             binding?.galleryImgPhoto?.setImageURI(picture)
-            binding?.galleryRecycler?.scrollTo(1, 1)
+            presenter.selectedUri(picture)
+            binding?.container?.fullScroll(View.FOCUS_UP)
         }
     }
 }

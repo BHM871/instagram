@@ -35,6 +35,10 @@ class HomePresenter(
         repository.clearCache()
     }
 
+    override fun liked(post: Post, liked: Boolean) {
+        repository.like(post, liked)
+    }
+
     override fun onDestroy() {
         view = null
     }

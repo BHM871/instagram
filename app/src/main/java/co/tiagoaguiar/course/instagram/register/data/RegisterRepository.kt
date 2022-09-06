@@ -25,8 +25,8 @@ class RegisterRepository(
             name,
             username,
             password,
-            object : RequestCallback<UserAuth> {
-                override fun onSuccess(data: UserAuth) {
+            object : RequestCallback<Pair<UserAuth, Boolean?>> {
+                override fun onSuccess(data: Pair<UserAuth, Boolean?>) {
                     localDataSource.putNewUser(data)
                     callback.onSuccess(true)
                 }
