@@ -10,7 +10,7 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import co.tiagoaguiar.course.instagram.R
 
-class LoadingButton : FrameLayout{
+class LoadingButton : FrameLayout {
 
     private lateinit var button: Button
     private lateinit var progress: ProgressBar

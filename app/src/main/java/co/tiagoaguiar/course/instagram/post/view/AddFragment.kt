@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -18,7 +17,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.viewpager2.widget.ViewPager2
 import co.tiagoaguiar.course.instagram.R
-import co.tiagoaguiar.course.instagram.add.util.AddViewPageAdapter
+import co.tiagoaguiar.course.instagram.post.util.AddViewPageAdapter
 import co.tiagoaguiar.course.instagram.add.view.AddActivity
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainAddBinding
 import com.google.android.material.tabs.TabLayout
@@ -93,8 +92,14 @@ class AddFragment : Fragment(R.layout.fragment_main_add) {
     }
 
     private fun allPermissionsGranted() =
-        ContextCompat.checkSelfPermission(requireContext(), REQUIRED_PERMISSIONS[0]) == PermissionChecker.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(requireContext(), REQUIRED_PERMISSIONS[1]) == PermissionChecker.PERMISSION_GRANTED
+        ContextCompat.checkSelfPermission(
+            requireContext(),
+            REQUIRED_PERMISSIONS[0]
+        ) == PermissionChecker.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(
+            requireContext(),
+            REQUIRED_PERMISSIONS[1]
+        ) == PermissionChecker.PERMISSION_GRANTED
 
     private fun starCamera() {
         setFragmentResult("cameraKey", bundleOf("startCamera" to true))

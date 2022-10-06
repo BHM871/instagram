@@ -54,7 +54,7 @@ class SplashActivity : AppCompatActivity(), SplashScreen.View {
 
     override fun goToLoginScreen() {
         fadeOut(fun(){
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(baseContext, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

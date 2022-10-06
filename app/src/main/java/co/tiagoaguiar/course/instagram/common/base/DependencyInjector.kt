@@ -14,7 +14,7 @@ import co.tiagoaguiar.course.instagram.home.data.HomeFeedCache
 import co.tiagoaguiar.course.instagram.home.data.HomeRepository
 import co.tiagoaguiar.course.instagram.home.presenter.HomePresenter
 import co.tiagoaguiar.course.instagram.login.Login
-import co.tiagoaguiar.course.instagram.login.data.LoginFakeDataSource
+import co.tiagoaguiar.course.instagram.login.data.LoginFireDataSource
 import co.tiagoaguiar.course.instagram.login.data.LoginRepository
 import co.tiagoaguiar.course.instagram.login.presentation.LoginPresenter
 import co.tiagoaguiar.course.instagram.main.Main
@@ -32,7 +32,7 @@ import co.tiagoaguiar.course.instagram.profile.presenter.ProfilePresenter
 import co.tiagoaguiar.course.instagram.register.RegisterEmail
 import co.tiagoaguiar.course.instagram.register.RegisterNamePassword
 import co.tiagoaguiar.course.instagram.register.RegisterPhoto
-import co.tiagoaguiar.course.instagram.register.data.RegisterFakeDataSource
+import co.tiagoaguiar.course.instagram.register.data.RegisterFireDataSource
 import co.tiagoaguiar.course.instagram.register.data.RegisterLocalDataSource
 import co.tiagoaguiar.course.instagram.register.data.RegisterRepository
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterEmailPresenter
@@ -43,14 +43,14 @@ import co.tiagoaguiar.course.instagram.search.data.SearchFakeDataSource
 import co.tiagoaguiar.course.instagram.search.data.SearchRepository
 import co.tiagoaguiar.course.instagram.search.presenter.SearchPresenter
 import co.tiagoaguiar.course.instagram.splash.SplashScreen
-import co.tiagoaguiar.course.instagram.splash.data.SplashFakeDataSource
+import co.tiagoaguiar.course.instagram.splash.data.SplashFireDataSource
 import co.tiagoaguiar.course.instagram.splash.data.SplashRepository
 import co.tiagoaguiar.course.instagram.splash.presenter.SplashPresenter
 
 object DependencyInjector {
 
     private fun splashRepository() : SplashRepository{
-        return SplashRepository(SplashFakeDataSource())
+        return SplashRepository(SplashFireDataSource())
     }
 
     fun splashPresenter(view: SplashScreen.View) : SplashScreen.Presenter{
@@ -58,7 +58,7 @@ object DependencyInjector {
     }
 
     private fun loginRepository() : LoginRepository{
-        return LoginRepository(LoginFakeDataSource())
+        return LoginRepository(LoginFireDataSource())
     }
 
     fun loginPresenter(view: Login.View) : LoginPresenter{
@@ -66,7 +66,7 @@ object DependencyInjector {
     }
 
     private fun registerRepository() : RegisterRepository {
-        return RegisterRepository(RegisterLocalDataSource(UserCache), RegisterFakeDataSource())
+        return RegisterRepository(RegisterLocalDataSource(UserCache), RegisterFireDataSource())
     }
 
     fun registerEmailPresenter(view: RegisterEmail.View) : RegisterEmail.Presenter{

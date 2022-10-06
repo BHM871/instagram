@@ -5,7 +5,7 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class LoginRepository(private val data: LoginDataSource) {
 
-    fun login(email: String, password: String, callback: RequestCallback<UserAuth>){
+    fun login(email: String, password: String, callback: RequestCallback<Boolean>){
         data.login(email, password, callback)
     }
 

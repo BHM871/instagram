@@ -43,7 +43,7 @@ class LoginActivity : AppCompatActivity(), Login.View {
         }
     }
 
-    private val watcher = TxtWatcher{
+    private val watcher = TxtWatcher {
         binding.loginBtnEnter.isEnabled = binding.loginEditEmail.text.toString().isNotEmpty()
                 && binding.loginEditPassword.text.toString().length >= 8
     }

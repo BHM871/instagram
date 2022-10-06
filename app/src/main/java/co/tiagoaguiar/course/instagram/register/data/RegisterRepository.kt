@@ -5,8 +5,8 @@ import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class RegisterRepository(
-    private val localDataSource: RegisterLocalDataSource,
-    private val remoteDataSource: RegisterFakeDataSource
+    private val localDataSource: RegisterDataSource,
+    private val remoteDataSource: RegisterDataSource
 ) {
 
     fun create(email: String, callback: RequestCallback<Boolean>) {

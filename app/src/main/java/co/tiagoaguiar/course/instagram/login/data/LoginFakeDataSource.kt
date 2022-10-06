@@ -7,7 +7,7 @@ import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class LoginFakeDataSource : LoginDataSource {
-    override fun login(email: String, password: String, callback: RequestCallback<UserAuth>) {
+    override fun login(email: String, password: String, callback: RequestCallback<Boolean>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.usersAuth.firstOrNull { email == it.email }
 
@@ -20,7 +20,7 @@ class LoginFakeDataSource : LoginDataSource {
 
                 else -> {
                     Database.sessionAuth = userAuth
-                    callback.onSuccess(userAuth)
+                    callback.onSuccess(true)
                 }
             }
 

@@ -1,4 +1,4 @@
-package co.tiagoaguiar.course.instagram.add.util
+package co.tiagoaguiar.course.instagram.post.util
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity

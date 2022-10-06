@@ -50,4 +50,5 @@
     <string name="empty_list">Nenhum post encontrado</string>
     <string name="permission_camera_denied">Permissão não concedida. Habilite nas configurações</string>
     <string name="your_story">Seu story</string>
+    <string name="serv_error">Erro no servidor</string>
 </resources>

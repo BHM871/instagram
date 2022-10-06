@@ -9,7 +9,7 @@ class RegisterLocalDataSource(
 ) : RegisterDataSource {
 
     override fun fetchSession(): UserAuth {
-        return Database.sessionAuth ?: throw RuntimeException("user not found")
+        return Database.sessionAuth ?: UserAuth("a", "a", "a", "a", "a")
     }
 
     override fun putNewUser(response: Pair<UserAuth, Boolean?>) {
