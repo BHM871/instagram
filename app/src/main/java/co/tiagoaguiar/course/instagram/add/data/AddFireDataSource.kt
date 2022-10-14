@@ -82,6 +82,9 @@ class AddFireDataSource : AddDataSource {
                                                                 .document(postRef.path)
                                                                 .set(post)
                                                         }
+
+                                                        callback.onSuccess(true)
+
                                                     }
                                                     .addOnFailureListener { exception ->
                                                         callback.onFailure(exception.message ?: "Failure add in feed")
