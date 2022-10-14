@@ -20,7 +20,7 @@ class HomeFakeDataSource : HomeDataSource {
 
     override fun liked(post: Post, liked: Boolean) {
         Handler(Looper.getMainLooper()).postDelayed({
-            Database.posts[post.publisher.uuid]?.first { it.uuid == post.uuid}?.like = liked
+            Database.posts[post.publisher?.uuid]?.first { it.uuid == post.uuid}?.like = liked
         }, 500)
     }
 

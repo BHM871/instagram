@@ -7,13 +7,13 @@ import co.tiagoaguiar.course.instagram.common.util.UserCache
 
 class AddRepository(
     private val localDataSource: AddLocalDataSource,
-    private val remoteDataSource: AddFakeDataSource
+    private val remoteDataSource: AddFireDataSource
 ) {
 
     fun createPost(uri: Uri, caption: String, callback: RequestCallback<Boolean>) {
-        val userAuth = localDataSource.fetchSession()
+        val userId = localDataSource.fetchSession()
 
-        remoteDataSource.createPost(userAuth.uuid, uri, caption, object : RequestCallback<Boolean> {
+        remoteDataSource.createPost(userId, uri, caption, object : RequestCallback<Boolean> {
             override fun onSuccess(data: Boolean) {
                 localDataSource.removeCache(UserCache)
                 localDataSource.removeCache(PostsCache)

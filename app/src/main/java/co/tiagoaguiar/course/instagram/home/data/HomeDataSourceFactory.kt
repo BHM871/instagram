@@ -7,19 +7,19 @@ class HomeDataSourceFactory(
     private val homeFeedCache: Cache<List<Post>>
 ) {
 
-    fun createLocalDataSource() : HomeLocalDataSource {
+    fun createLocalDataSource() : HomeDataSource {
         return HomeLocalDataSource(homeFeedCache)
     }
 
-    fun createRemoteDataSource() : HomeFakeDataSource {
-        return HomeFakeDataSource()
+    fun createRemoteDataSource() : HomeDataSource {
+        return HomeFireDataSource()
     }
 
     fun createFromFeed() : HomeDataSource {
         return if (homeFeedCache.isCached()){
             HomeLocalDataSource(homeFeedCache)
         } else {
-            HomeFakeDataSource()
+            HomeFireDataSource()
         }
     }
 

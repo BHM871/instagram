@@ -16,7 +16,7 @@ import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
 import co.tiagoaguiar.course.instagram.common.model.Post
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
 import co.tiagoaguiar.course.instagram.common.view.PostZoom
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainProfileBinding
@@ -25,6 +25,7 @@ import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 import co.tiagoaguiar.course.instagram.main.view.MainActivity
 import co.tiagoaguiar.course.instagram.profile.Profile
 import co.tiagoaguiar.course.instagram.profile.util.ProfileAdapter
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Presenter>(
@@ -70,14 +71,16 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
 
                 profileIncludeProfile.profileBtnEditProfile.setOnClickListener {
                     if (it.tag == true) {
-                        profileIncludeProfile.profileBtnEditProfile.text = getString(R.string.follow)
+                        profileIncludeProfile.profileBtnEditProfile.text =
+                            getString(R.string.follow)
                         profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
                             ContextCompat.getColorStateList(requireContext(), R.color.blue_enabled)
                         it.tag = false
 
                         presenter.followUser(uuid, false)
                     } else if (it.tag == false) {
-                        profileIncludeProfile.profileBtnEditProfile.text = getString(R.string.unfollow)
+                        profileIncludeProfile.profileBtnEditProfile.text =
+                            getString(R.string.unfollow)
                         profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
                             ContextCompat.getColorStateList(requireContext(), R.color.white)
                         it.tag = true
@@ -85,9 +88,6 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                         presenter.followUser(uuid, true)
                     }
                 }
-
-                if (uuid != null) profileIncludeProfile.profileImgAdd.visibility =
-                    View.GONE
 
                 presenter.fetchUserProfile(uuid)
 
@@ -126,7 +126,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         binding?.profileProgressBar?.visibility = if (enabled) View.VISIBLE else View.GONE
     }
 
-    override fun displayUserProfile(user: Pair<UserAuth, Boolean?>) {
+    override fun displayUserProfile(user: Pair<User, Boolean?>) {
         val (userAuth, following) = user
 
         binding?.let { binding ->
@@ -134,19 +134,29 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                 profileIncludeProfile.profileTxtUsername.text = userAuth.username
                 profileIncludeProfile.profileTxtPostCount.text = userAuth.postCount.toString()
                 profileIncludeProfile.profileTxtFollowingCount.text =
-                    userAuth.followingCount.toString()
+                    userAuth.following.toString()
                 profileIncludeProfile.profileTxtFollowersCount.text =
-                    userAuth.followersCount.toString()
-                profileIncludeProfile.profileImgIcon.setImageURI(userAuth.photoUri)
-                if (userAuth.photoUri != null) profileIncludeProfile.profileImgAdd.visibility =
+                    userAuth.followers.toString()
+                Glide.with(requireContext()).load(userAuth.photoUrl)
+                    .into(profileIncludeProfile.profileImgIcon)
+
+                if (userAuth.photoUrl != null) profileIncludeProfile.profileImgAdd.visibility =
                     View.GONE
+
 
                 profileIncludeProfile.profileBtnEditProfile.text = when (following) {
                     null -> getString(R.string.edit_profile)
-                    true -> getString(R.string.unfollow)
+                    true -> {
+                        profileIncludeProfile.profileImgAdd.visibility = View.GONE
+                        getString(R.string.unfollow)
+                    }
                     false -> {
+                        profileIncludeProfile.profileImgAdd.visibility = View.GONE
                         profileIncludeProfile.profileBtnEditProfile.backgroundTintList =
-                            ContextCompat.getColorStateList(requireContext(), R.color.blue_enabled)
+                            ContextCompat.getColorStateList(
+                                requireContext(),
+                                R.color.blue_enabled
+                            )
                         getString(R.string.follow)
                     }
                 }
@@ -192,7 +202,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     }
 
     override fun follow(isFollow: Boolean) {
-        if (isFollow){
+        if (isFollow) {
             (requireActivity() as MainActivity).onPostCreated()
         }
     }
@@ -204,10 +214,10 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     @SuppressLint("NewApi")
     private val onLongClickItem: (Post) -> Unit = { post: Post ->
         PostZoom(requireContext()).apply {
-            setImageProfile(post.publisher.photoUri ?: Uri.EMPTY)
+            setImageProfileURL(post.publisher?.photoUrl!!)
             setTitle(post.publisher.username)
-            setImage(post.uri)
-            setCaption(post.description)
+            setImageURL(post.photoUrl!!)
+            setCaption(post.description ?: "")
             show()
         }
     }

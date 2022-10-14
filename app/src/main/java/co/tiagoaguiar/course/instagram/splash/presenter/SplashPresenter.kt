@@ -1,5 +1,6 @@
 package co.tiagoaguiar.course.instagram.splash.presenter
 
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.splash.SplashScreen
 import co.tiagoaguiar.course.instagram.splash.data.SplashCallback
 import co.tiagoaguiar.course.instagram.splash.data.SplashRepository
@@ -11,7 +12,7 @@ class SplashPresenter(
 
     override fun authenticate() {
         repository.session(object : SplashCallback{
-            override fun onSuccess() {
+            override fun onSuccess(data: Pair<User, Boolean?>) {
                 view?.goToMainScreen()
             }
 

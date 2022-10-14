@@ -7,6 +7,7 @@ import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import com.google.firebase.auth.FirebaseAuth
 import java.util.*
 
 class AddFakeDataSource : AddDataSource {
@@ -26,7 +27,7 @@ class AddFakeDataSource : AddDataSource {
                 Database.posts[userUUID] = posts
             }
 
-            val post = Post(UUID.randomUUID().toString(), uri, caption, System.currentTimeMillis(), Database.sessionAuth!!)
+            val post = Post(UUID.randomUUID().toString(), null, caption, System.currentTimeMillis(), null)
             Database.posts[Database.sessionAuth!!.uuid]?.add(post)
             Database.usersAuth.firstOrNull{ it.uuid == Database.sessionAuth!!.uuid }!!.postCount += 1
 
@@ -58,8 +59,8 @@ class AddFakeDataSource : AddDataSource {
         }, 500)
     }
 
-    override fun fetchSession(): UserAuth {
-        return Database.sessionAuth!!
+    override fun fetchSession(): String {
+        return FirebaseAuth.getInstance().uid ?: throw RuntimeException("User not found")
     }
 
 }

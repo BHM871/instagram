@@ -5,10 +5,11 @@ import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import android.os.Handler
 import co.tiagoaguiar.course.instagram.common.model.Database
+import co.tiagoaguiar.course.instagram.common.model.User
 
 class SearchFakeDataSource : SearchDataSource {
 
-    override fun fetchUsers(username: String, callback: RequestCallback<List<UserAuth>>) {
+    override fun fetchUsers(username: String, callback: RequestCallback<List<User>>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val users = Database.usersAuth.filter {
                 it.username.lowercase()
@@ -22,7 +23,7 @@ class SearchFakeDataSource : SearchDataSource {
                 })
 
             if (users.isNotEmpty()) {
-                callback.onSuccess(users)
+                //callback.onSuccess(users)
             } else {
                 callback.onFailure("empty")
             }

@@ -11,7 +11,7 @@ object HomeFeedCache : Cache<List<Post>> {
         return feed != null
     }
 
-    override fun get(key: String): List<Post>? {
+    override fun get(key: String?): List<Post>? {
         return feed
     }
 

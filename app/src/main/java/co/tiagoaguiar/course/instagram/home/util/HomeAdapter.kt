@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
 class HomeAdapter<T>(
@@ -50,12 +51,12 @@ class HomeAdapter<T>(
             val txtUser = findViewById<TextView>(R.id.item_home_txt_username)
             val txtDesc = findViewById<TextView>(R.id.item_home_txt_caption)
 
-            imgProfile.setImageURI(post.publisher.photoUri)
+            Glide.with(context).load(post.photoUrl).into(imgPost)
+            Glide.with(context).load(post.publisher?.photoUrl).into(imgProfile)
 
-            imgPost.setImageURI(post.uri)
-            iconLike.isSelected = post.like
+            //iconLike.isSelected = post.like
 
-            txtUser.text = post.publisher.username
+            txtUser.text = post.publisher?.username
             txtDesc.text = post.description
             if (post.description != "")
                 txtDesc.visibility = View.VISIBLE

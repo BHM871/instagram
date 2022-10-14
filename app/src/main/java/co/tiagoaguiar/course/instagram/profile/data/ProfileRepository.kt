@@ -3,18 +3,17 @@ package co.tiagoaguiar.course.instagram.profile.data
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Post
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
-import java.util.*
+import co.tiagoaguiar.course.instagram.common.model.User
 
 class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory) {
 
-    fun fetchUserProfile(uuid: String?, callback: RequestCallback<Pair<UserAuth, Boolean?>>){
+    fun fetchUserProfile(uuid: String?, callback: RequestCallback<Pair<User, Boolean?>>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userId = uuid ?: localDataSource.fetchSession().uuid
+        val userId = uuid ?: localDataSource.fetchSession()
         val data = dataSourceFactory.createFromUser(uuid)
 
-        data.fetchUserProfile(userId, object : RequestCallback<Pair<UserAuth, Boolean?>> {
-            override fun onSuccess(data: Pair<UserAuth, Boolean?>) {
+        data.fetchUserProfile(userId, object : RequestCallback<Pair<User, Boolean?>> {
+            override fun onSuccess(data: Pair<User, Boolean?>) {
                 if (uuid == null) localDataSource.putUser(data)
                 callback.onSuccess(data)
             }
@@ -31,7 +30,7 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
 
     fun fetchUserPost(uuid: String?, callback: RequestCallback<List<Post>>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userId = uuid ?: localDataSource.fetchSession().uuid
+        val userId = uuid ?: localDataSource.fetchSession()
         val data = dataSourceFactory.createFromPosts(uuid)
 
         data.fetchUserPost(userId, object : RequestCallback<List<Post>> {
@@ -52,15 +51,15 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
 
     fun updatePhoto(photoUri: Uri, callback: RequestCallback<Uri>){
         val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userAuth = localDataSource.fetchSession()
+        val userId = localDataSource.fetchSession()
 
         val data = ProfileFakeDataSource()
-        data.updatePhoto(userAuth.uuid, photoUri, callback)
+        data.updatePhoto(userId, photoUri, callback)
     }
 
     fun followUser(uuid: String?, follow: Boolean, callback: RequestCallback<Boolean>) {
         val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userId = uuid ?: localDataSource.fetchSession().uuid
+        val userId = uuid ?: localDataSource.fetchSession()
         val dataSource = dataSourceFactory.createRemoteDataSource()
 
         dataSource.followUser(userId, follow, object : RequestCallback<Boolean> {

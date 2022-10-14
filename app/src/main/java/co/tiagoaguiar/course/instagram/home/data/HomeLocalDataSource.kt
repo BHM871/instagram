@@ -5,6 +5,7 @@ import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import com.google.firebase.auth.FirebaseAuth
 
 class HomeLocalDataSource(
     private val homeFeedCache: Cache<List<Post>>
@@ -22,8 +23,8 @@ class HomeLocalDataSource(
         callback.onComplete()
     }
 
-    override fun fetchSession(): UserAuth {
-        return Database.sessionAuth ?: throw RuntimeException("User not found")
+    override fun fetchSession(): String {
+        return FirebaseAuth.getInstance().uid ?: throw RuntimeException("User not found")
     }
 
     override fun putFeed(response: List<Post>) {
@@ -35,7 +36,7 @@ class HomeLocalDataSource(
     }
 
     override fun liked(post: Post, liked: Boolean) {
-        (homeFeedCache as HomeFeedCache).like(post.uuid, liked)
+        (homeFeedCache as HomeFeedCache).like(post.uuid!!, liked)
     }
 
 }

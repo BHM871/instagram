@@ -2,40 +2,41 @@ package co.tiagoaguiar.course.instagram.profile.data
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.Post
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileDataSourceFactory(
-    private val userCache: Cache<Pair<UserAuth, Boolean?>>,
+    private val userCache: Cache<Pair<User, Boolean?>>,
     private val postCache: Cache<List<Post>>
 ) {
 
-    fun createLocalDataSource() : ProfileLocalDataSource {
+    fun createLocalDataSource() : ProfileDataSource {
         return ProfileLocalDataSource(userCache, postCache)
     }
 
-    fun createRemoteDataSource() : ProfileFakeDataSource {
-        return ProfileFakeDataSource()
+    fun createRemoteDataSource() : ProfileDataSource {
+        return ProfileFireDataSource()
     }
 
     fun createFromUser(uuid: String?) : ProfileDataSource {
         if (uuid != null)
-            return ProfileFakeDataSource()
+            return createRemoteDataSource()
 
         return if (userCache.isCached()){
-            ProfileLocalDataSource(userCache, postCache)
+            createLocalDataSource()
         } else {
-            ProfileFakeDataSource()
+            createRemoteDataSource()
         }
     }
 
     fun createFromPosts(uuid: String?) : ProfileDataSource {
         if (uuid != null)
-            return ProfileFakeDataSource()
+            return createRemoteDataSource()
 
         return if (postCache.isCached()){
-            ProfileLocalDataSource(userCache, postCache)
+            createLocalDataSource()
         } else {
-            ProfileFakeDataSource()
+            createRemoteDataSource()
         }
     }
 

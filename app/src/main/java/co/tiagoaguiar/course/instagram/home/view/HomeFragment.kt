@@ -46,10 +46,10 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryImg?.setImageURI(Database.sessionAuth?.photoUri)
         binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryTxt?.text =
             getText(R.string.your_story)
-        val list: MutableList<UserAuth> =
-            Database.usersAuth.filter { it.name != Database.sessionAuth!!.name } as MutableList<UserAuth>
-        storyAdapter.list = list
-
+//        val list: MutableList<UserAuth> =
+//            Database.usersAuth.filter { it.name != Database.sessionAuth!!.name } as MutableList<UserAuth>
+//        storyAdapter.list = list
+//
         binding?.homeRecyclerStory?.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding?.homeRecyclerStory?.adapter = storyAdapter
@@ -112,28 +112,28 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         }
 
     private fun onDoubleClickItem(post: Post, imgLike: ImageView, iconLike: ImageView) {
-        post.countClick++
-        if (post.countClick == 2) {
-            imgLike.animate().apply {
-                duration = 250
-                alpha(1.0f)
-                start()
-            }
-
-            iconLike.isSelected = !iconLike.isSelected
-            presenter.liked(post, iconLike.isSelected)
-
-            Handler(Looper.getMainLooper()).postDelayed({
-                imgLike.animate().apply {
-                    duration = 250
-                    alpha(0f)
-                    start()
-                }
-            }, 250)
-        }
-        Handler(Looper.getMainLooper()).postDelayed({
-            post.countClick = 0
-        }, 200)
+//        post.countClick++
+//        if (post.countClick == 2) {
+//            imgLike.animate().apply {
+//                duration = 250
+//                alpha(1.0f)
+//                start()
+//            }
+//
+//            iconLike.isSelected = !iconLike.isSelected
+//            presenter.liked(post, iconLike.isSelected)
+//
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                imgLike.animate().apply {
+//                    duration = 250
+//                    alpha(0f)
+//                    start()
+//                }
+//            }, 250)
+//        }
+//        Handler(Looper.getMainLooper()).postDelayed({
+//            post.countClick = 0
+//        }, 200)
     }
 
     private fun like(post: Post, imgLike: ImageView, iconLike: ImageView) {

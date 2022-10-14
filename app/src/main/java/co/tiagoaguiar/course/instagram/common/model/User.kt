@@ -5,7 +5,7 @@ data class User(
     val name: String? = null,
     var username: String? = null,
     val email: String? = null,
-    var password: String,
+    var password: String?= null,
     var photoUrl: String? = null,
     var postCount: Int = 0,
     var following: Int = 0,

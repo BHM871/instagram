@@ -9,7 +9,7 @@ interface AddDataSource {
 
     fun createPost(userUUID: String, uri: Uri, caption: String, callback: RequestCallback<Boolean>) { throw UnsupportedOperationException() }
 
-    fun fetchSession() : UserAuth { throw UnsupportedOperationException() }
+    fun fetchSession() : String { throw UnsupportedOperationException() }
 
     fun <T> removeCache(cache: Cache<T>) { throw UnsupportedOperationException() }
 

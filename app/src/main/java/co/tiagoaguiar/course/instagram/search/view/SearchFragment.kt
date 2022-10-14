@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainSearchBinding
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
@@ -95,7 +96,7 @@ class SearchFragment : BaseFragment<FragmentMainSearchBinding, Search.Presenter>
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    override fun displayFullUsers(users: List<UserAuth>) {
+    override fun displayFullUsers(users: List<User>) {
         binding?.searchTxtEmptyList?.visibility = View.GONE
         binding?.searchRecycler?.visibility = View.VISIBLE
         adapter.list.clear()

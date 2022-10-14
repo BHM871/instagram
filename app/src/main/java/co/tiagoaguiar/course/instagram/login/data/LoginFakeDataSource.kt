@@ -4,10 +4,10 @@ import android.os.Handler
 import android.os.Looper
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import co.tiagoaguiar.course.instagram.common.model.User
 
 class LoginFakeDataSource : LoginDataSource {
-    override fun login(email: String, password: String, callback: RequestCallback<Boolean>) {
+    override fun login(email: String, password: String, callback: RequestCallback<User>) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.usersAuth.firstOrNull { email == it.email }
 
@@ -20,7 +20,7 @@ class LoginFakeDataSource : LoginDataSource {
 
                 else -> {
                     Database.sessionAuth = userAuth
-                    callback.onSuccess(true)
+                    callback.onSuccess((userAuth as User))
                 }
             }
 

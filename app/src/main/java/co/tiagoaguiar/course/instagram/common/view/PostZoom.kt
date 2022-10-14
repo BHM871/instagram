@@ -12,6 +12,7 @@ import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.databinding.PostZoomBinding
+import com.bumptech.glide.Glide
 
 @SuppressLint("SupportAnnotationUsage")
 class PostZoom(context: Context) : Dialog(context) {
@@ -45,12 +46,20 @@ class PostZoom(context: Context) : Dialog(context) {
         this.imagePost = imageUri
     }
 
+    fun setImageURL(url: String) {
+        Glide.with(context).load(url).into(binding.zoomImgPhoto)
+    }
+
     fun setCaption(captionId: Int) {
         this.caption = context.getString(captionId)
     }
 
     fun setCaption(caption: String) {
         this.caption = caption
+    }
+
+    fun setImageProfileURL(url: String){
+        Glide.with(context).load(url).into(binding.zoomImgProfile)
     }
 
     @RequiresApi(Build.VERSION_CODES.R)

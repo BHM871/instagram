@@ -2,7 +2,7 @@ package co.tiagoaguiar.course.instagram.search
 
 import co.tiagoaguiar.course.instagram.common.base.BasePresenter
 import co.tiagoaguiar.course.instagram.common.base.BaseView
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import co.tiagoaguiar.course.instagram.common.model.User
 
 interface Search {
 
@@ -16,7 +16,7 @@ interface Search {
 
         fun showProgress(enabled: Boolean)
         fun displayEmptyUsers()
-        fun displayFullUsers(users: List<UserAuth>)
+        fun displayFullUsers(users: List<User>)
 
     }
 

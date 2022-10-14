@@ -12,7 +12,7 @@ object PostsCache : Cache<List<Post>> {
         return posts != null
     }
 
-    override fun get(key: String): List<Post>? {
+    override fun get(key: String?): List<Post>? {
         return posts
     }
 

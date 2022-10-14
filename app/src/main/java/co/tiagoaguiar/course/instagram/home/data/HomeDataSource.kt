@@ -9,7 +9,7 @@ interface HomeDataSource {
     fun fetchFeed(userUUID: String, callback: RequestCallback<List<Post>>)
     fun liked(post: Post, liked: Boolean)
 
-    fun fetchSession() : UserAuth { throw UnsupportedOperationException("User not found") }
+    fun fetchSession() : String { throw UnsupportedOperationException("User not found") }
     fun putFeed(response: List<Post>) { throw UnsupportedOperationException("User not found") }
     fun removeCache() { throw UnsupportedOperationException("User not found") }
 

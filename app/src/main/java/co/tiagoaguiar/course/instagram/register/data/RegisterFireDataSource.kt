@@ -3,7 +3,6 @@ package co.tiagoaguiar.course.instagram.register.data
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -11,13 +10,11 @@ import com.google.firebase.storage.FirebaseStorage
 class RegisterFireDataSource : RegisterDataSource {
 
     private val servError: String = "Serv error"
-    private val users: String = "/users"
-    private val email: String = "email"
 
     override fun createUser(email: String, callback: RequestCallback<Boolean>) {
         FirebaseFirestore.getInstance()
-            .collection(users)
-            .whereEqualTo(this.email, email)
+            .collection("/users")
+            .whereEqualTo("email", email)
             .get()
             .addOnSuccessListener { documents ->
 
@@ -41,7 +38,7 @@ class RegisterFireDataSource : RegisterDataSource {
         name: String,
         username: String,
         password: String,
-        callback: RequestCallback<Pair<UserAuth, Boolean?>>
+        callback: RequestCallback<Pair<User, Boolean?>>
     ) {
         FirebaseAuth.getInstance()
             .createUserWithEmailAndPassword(email, password)
@@ -53,7 +50,7 @@ class RegisterFireDataSource : RegisterDataSource {
                     callback.onFailure(servError)
                 } else {
                     FirebaseFirestore.getInstance()
-                        .collection(users)
+                        .collection("/users")
                         .document(uid)
                         .set(
                             hashMapOf(
@@ -68,7 +65,7 @@ class RegisterFireDataSource : RegisterDataSource {
                             )
                         )
                         .addOnSuccessListener {
-                            val newUser = UserAuth(uid, name, username, email, password)
+                            val newUser = User(uid, name, username, email, password)
                             callback.onSuccess(Pair(newUser, null))
                         }
                         .addOnFailureListener { exception ->
@@ -95,7 +92,7 @@ class RegisterFireDataSource : RegisterDataSource {
 
         val storageRef = FirebaseStorage.getInstance().reference
 
-        val imageRef = storageRef.child("image/")
+        val imageRef = storageRef.child("images/")
             .child(uid)
             .child(photoUri.lastPathSegment!!)
 
@@ -106,10 +103,11 @@ class RegisterFireDataSource : RegisterDataSource {
                     .addOnSuccessListener { res ->
 
                         val userRef =
-                            FirebaseFirestore.getInstance().collection(users).document(uid)
+                            FirebaseFirestore.getInstance().collection("/users").document(uid)
+
                         userRef.get()
-                            .addOnSuccessListener { documents ->
-                                val user = documents.toObject(User::class.java)
+                            .addOnSuccessListener { document ->
+                                val user = document.toObject(User::class.java)
                                 val newUser = user?.copy(photoUrl = res.toString())
 
                                 if (newUser != null) {
@@ -131,8 +129,6 @@ class RegisterFireDataSource : RegisterDataSource {
             }
             .addOnFailureListener { exception ->
                 callback.onFailure(exception.message ?: "Error importing image")
-            }
-            .addOnCompleteListener {
                 callback.onComplete()
             }
     }

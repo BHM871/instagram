@@ -2,17 +2,19 @@ package co.tiagoaguiar.course.instagram.register.data
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.Database
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import com.google.firebase.auth.FirebaseAuth
 
 class RegisterLocalDataSource(
-    private val userCache: Cache<Pair<UserAuth, Boolean?>>,
+    private val userCache: Cache<Pair<User, Boolean?>>,
 ) : RegisterDataSource {
 
-    override fun fetchSession(): UserAuth {
-        return Database.sessionAuth ?: UserAuth("a", "a", "a", "a", "a")
+    override fun fetchSession(): String{
+        return FirebaseAuth.getInstance().uid ?: throw RuntimeException("User not found")
     }
 
-    override fun putNewUser(response: Pair<UserAuth, Boolean?>) {
+    override fun putNewUser(response: Pair<User, Boolean?>) {
         userCache.put(response)
     }
 

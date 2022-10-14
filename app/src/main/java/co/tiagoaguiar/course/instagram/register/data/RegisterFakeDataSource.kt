@@ -5,6 +5,7 @@ import android.os.Handler
 import android.os.Looper
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Database
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import java.util.*
 
@@ -27,7 +28,7 @@ class RegisterFakeDataSource : RegisterDataSource {
         name: String,
         username: String,
         password: String,
-        callback: RequestCallback<Pair<UserAuth, Boolean?>>
+        callback: RequestCallback<Pair<User, Boolean?>>
     ) {
         Handler(Looper.getMainLooper()).postDelayed({
             val userAuth = Database.usersAuth.firstOrNull{it.email == email}
@@ -67,7 +68,7 @@ class RegisterFakeDataSource : RegisterDataSource {
                         Database.feed[newUser.uuid] = feed
                     }
 
-                    callback.onSuccess(Pair(Database.sessionAuth!!, null))
+                    callback.onSuccess(Pair((Database.sessionAuth!! as User), null))
                 }
             }
 

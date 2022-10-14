@@ -2,7 +2,7 @@ package co.tiagoaguiar.course.instagram.common.base
 
 import android.content.Context
 import co.tiagoaguiar.course.instagram.add.Add
-import co.tiagoaguiar.course.instagram.add.data.AddFakeDataSource
+import co.tiagoaguiar.course.instagram.add.data.AddFireDataSource
 import co.tiagoaguiar.course.instagram.add.data.AddLocalDataSource
 import co.tiagoaguiar.course.instagram.add.data.AddRepository
 import co.tiagoaguiar.course.instagram.add.presenter.AddPresenter
@@ -39,7 +39,7 @@ import co.tiagoaguiar.course.instagram.register.presenter.RegisterEmailPresenter
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterNamePasswordPresenter
 import co.tiagoaguiar.course.instagram.register.presenter.RegisterPhotoPresenter
 import co.tiagoaguiar.course.instagram.search.Search
-import co.tiagoaguiar.course.instagram.search.data.SearchFakeDataSource
+import co.tiagoaguiar.course.instagram.search.data.SearchFireDataSource
 import co.tiagoaguiar.course.instagram.search.data.SearchRepository
 import co.tiagoaguiar.course.instagram.search.presenter.SearchPresenter
 import co.tiagoaguiar.course.instagram.splash.SplashScreen
@@ -50,7 +50,7 @@ import co.tiagoaguiar.course.instagram.splash.presenter.SplashPresenter
 object DependencyInjector {
 
     private fun splashRepository() : SplashRepository{
-        return SplashRepository(SplashFireDataSource())
+        return SplashRepository(SplashFireDataSource(), UserCache)
     }
 
     fun splashPresenter(view: SplashScreen.View) : SplashScreen.Presenter{
@@ -98,7 +98,7 @@ object DependencyInjector {
     }
 
     private fun mainAddRepository() : AddRepository {
-        return AddRepository(AddLocalDataSource(), AddFakeDataSource())
+        return AddRepository(AddLocalDataSource(), AddFireDataSource())
     }
 
     fun mainAddPresenter(view: Add.View) : Add.Presenter {
@@ -114,7 +114,7 @@ object DependencyInjector {
     }
 
     private fun searchRepository() : SearchRepository {
-        return SearchRepository(SearchFakeDataSource())
+        return SearchRepository(SearchFireDataSource())
     }
 
     fun searchPresenter(view: Search.View) : Search.Presenter {
@@ -122,7 +122,7 @@ object DependencyInjector {
     }
 
     private fun mainRepository() : MainRepository {
-        return MainRepository(MainFakeDataSource())
+        return MainRepository(MainFakeDataSource(), PostsCache, UserCache)
     }
 
     fun mainPresenter(view: Main.View): Main.Presenter {

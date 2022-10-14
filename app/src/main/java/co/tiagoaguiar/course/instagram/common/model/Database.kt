@@ -12,22 +12,7 @@ object Database {
     var sessionAuth: UserAuth? = null
 
     init {
-        for (i in 0..26) {
-            usersAuth.add(
-                UserAuth(
-                    UUID.randomUUID().toString(),
-                    "User${(i + 65).toChar()}",
-                    "user_${(i + 97).toChar()}",
-                    "user${(i + 65).toChar()}@gmail.com",
-                    "$i$i$i$i$i$i$i$i"
-                )
-            )
-
-            posts[usersAuth[i].uuid] = mutableSetOf()
-            feed[usersAuth[i].uuid] = mutableSetOf()
-            followers[usersAuth[i].uuid] = mutableSetOf()
-
-        }
+        usersAuth.add(UserAuth("uisdsad", "UserA", "user_a", "a@a.com", "123123123"))
     }
 
 }

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.model.Post
+import com.bumptech.glide.Glide
 
 class ProfileAdapter(
     private val listener: (Post) -> Unit
@@ -31,7 +32,7 @@ class ProfileAdapter(
         fun bind(post: Post) = with(itemView) {
             val img = findViewById<ImageView>(R.id.item_profile_img_grid)
 
-            img.setImageURI(post.uri)
+            Glide.with(context).load(post.photoUrl).into(img)
 
             img.setOnLongClickListener {
                 listener.invoke(post)

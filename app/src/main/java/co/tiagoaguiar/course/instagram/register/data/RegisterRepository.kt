@@ -2,7 +2,7 @@ package co.tiagoaguiar.course.instagram.register.data
 
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
+import co.tiagoaguiar.course.instagram.common.model.User
 
 class RegisterRepository(
     private val localDataSource: RegisterDataSource,
@@ -25,8 +25,8 @@ class RegisterRepository(
             name,
             username,
             password,
-            object : RequestCallback<Pair<UserAuth, Boolean?>> {
-                override fun onSuccess(data: Pair<UserAuth, Boolean?>) {
+            object : RequestCallback<Pair<User, Boolean?>> {
+                override fun onSuccess(data: Pair<User, Boolean?>) {
                     localDataSource.putNewUser(data)
                     callback.onSuccess(true)
                 }
@@ -44,7 +44,7 @@ class RegisterRepository(
     fun updateUser(photoUri: Uri, callback: RequestCallback<Uri?>) {
         val userAuth = localDataSource.fetchSession()
 
-        remoteDataSource.updateUser(userAuth.uuid, photoUri, object : RequestCallback<Uri?> {
+        remoteDataSource.updateUser(userAuth.uuid!!, photoUri, object : RequestCallback<Uri?> {
             override fun onSuccess(data: Uri?) {
                 callback.onSuccess(data)
             }

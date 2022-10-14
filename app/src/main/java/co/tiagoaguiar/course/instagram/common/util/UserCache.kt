@@ -1,25 +1,22 @@
 package co.tiagoaguiar.course.instagram.common.util
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
+import co.tiagoaguiar.course.instagram.common.model.User
 import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
-object UserCache : Cache<Pair<UserAuth, Boolean?>> {
+object UserCache : Cache<Pair<User, Boolean?>> {
 
-    var userAuth: Pair<UserAuth, Boolean?>? = null
+    var userAuth: Pair<User, Boolean?>? = null
 
     override fun isCached(): Boolean {
         return userAuth != null
     }
 
-    override fun get(key: String): Pair<UserAuth, Boolean?>? {
-        return if (userAuth?.first?.uuid == key){
-            userAuth
-        } else {
-            null
-        }
+    override fun get(key: String?): Pair<User, Boolean?>? {
+        return userAuth
     }
 
-    override fun put(data: Pair<UserAuth, Boolean?>) {
+    override fun put(data: Pair<User, Boolean?>) {
         userAuth = data
     }
 
