@@ -4,18 +4,19 @@ import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.User
+import co.tiagoaguiar.course.instagram.common.util.PostsCache
+import co.tiagoaguiar.course.instagram.common.util.UserCache
 
 class MainRepository(
-    private val dataSource: MainDataSource,
-    private val postsCache: Cache<List<Post>>,
-    private val userCache: Cache<Pair<User, Boolean?>>
+    private val remoteDataSource: MainDataSource,
+    private val localDataSource: MainDataSource
 ) {
 
     fun logout(callback: RequestCallback<Boolean>) {
-        dataSource.logout(object : RequestCallback<Boolean> {
+        remoteDataSource.logout(object : RequestCallback<Boolean> {
             override fun onSuccess(data: Boolean) {
-                postsCache.remove()
-                userCache.remove()
+                localDataSource.removeCache(PostsCache)
+                localDataSource.removeCache(UserCache)
                 callback.onSuccess(data)
             }
 
