@@ -44,21 +44,21 @@ class SplashActivity : AppCompatActivity(), SplashScreen.View {
     }
 
     override fun goToMainScreen() {
-        fadeOut(fun(){
+        fadeOut{
             val intent = Intent (baseContext, MainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        })
+        }
     }
 
     override fun goToLoginScreen() {
-        fadeOut(fun(){
+        fadeOut{
             val intent = Intent(baseContext, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-        })
+        }
     }
 
     override fun onDestroy() {

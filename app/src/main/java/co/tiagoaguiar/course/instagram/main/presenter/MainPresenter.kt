@@ -1,8 +1,8 @@
 package co.tiagoaguiar.course.instagram.main.presenter
 
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
-import co.tiagoaguiar.course.instagram.main.Main
 import co.tiagoaguiar.course.instagram.main.data.MainRepository
+import co.tiagoaguiar.course.instagram.main.Main
 
 class MainPresenter(
     private var view: Main.View?,
@@ -12,7 +12,7 @@ class MainPresenter(
     override fun logout() {
         repository.logout(object : RequestCallback<Boolean> {
             override fun onSuccess(data: Boolean) {
-                view?.isLogout(data)
+                view?.success()
             }
 
             override fun onFailure(message: String) { }

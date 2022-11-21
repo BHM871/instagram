@@ -42,9 +42,9 @@ class RegisterRepository(
     }
 
     fun updateUser(photoUri: Uri, callback: RequestCallback<Uri?>) {
-        val userAuth = localDataSource.fetchSession()
+        val userId = localDataSource.fetchSession()
 
-        remoteDataSource.updateUser(userAuth.uuid!!, photoUri, object : RequestCallback<Uri?> {
+        remoteDataSource.updateUser(userId, photoUri, object : RequestCallback<Uri?> {
             override fun onSuccess(data: Uri?) {
                 callback.onSuccess(data)
             }

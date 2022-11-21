@@ -3,7 +3,6 @@ package co.tiagoaguiar.course.instagram.profile.data
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 class ProfileDataSourceFactory(
     private val userCache: Cache<Pair<User, Boolean?>>,

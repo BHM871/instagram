@@ -49,20 +49,12 @@ class ProfileRepository(private val dataSourceFactory: ProfileDataSourceFactory)
         })
     }
 
-    fun updatePhoto(photoUri: Uri, callback: RequestCallback<Uri>){
-        val localDataSource = dataSourceFactory.createLocalDataSource()
-        val userId = localDataSource.fetchSession()
-
-        val data = ProfileFakeDataSource()
-        data.updatePhoto(userId, photoUri, callback)
-    }
-
     fun followUser(uuid: String?, follow: Boolean, callback: RequestCallback<Boolean>) {
         val localDataSource = dataSourceFactory.createLocalDataSource()
         val userId = uuid ?: localDataSource.fetchSession()
-        val dataSource = dataSourceFactory.createRemoteDataSource()
+        val remoteDataSource = dataSourceFactory.createRemoteDataSource()
 
-        dataSource.followUser(userId, follow, object : RequestCallback<Boolean> {
+        remoteDataSource.followUser(userId, follow, object : RequestCallback<Boolean> {
             override fun onSuccess(data: Boolean) {
                 localDataSource.removeCache()
                 callback.onSuccess(data)

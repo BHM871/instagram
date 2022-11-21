@@ -22,8 +22,4 @@ object HomeFeedCache : Cache<List<Post>> {
     override fun remove() {
         feed = null
     }
-
-    fun like(uuid: String, liked: Boolean){
-        feed?.first { it.uuid == uuid }?.like = liked
-    }
 }

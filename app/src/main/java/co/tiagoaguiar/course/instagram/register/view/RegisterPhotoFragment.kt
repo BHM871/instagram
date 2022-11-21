@@ -12,7 +12,7 @@ import androidx.fragment.app.setFragmentResultListener
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
-import co.tiagoaguiar.course.instagram.common.extension.openDialogForPhoto
+import co.tiagoaguiar.course.instagram.common.extension.openDialogFromPhoto
 import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
 import co.tiagoaguiar.course.instagram.databinding.FragmentRegisterPhotoBinding
 import co.tiagoaguiar.course.instagram.register.RegisterPhoto
@@ -64,7 +64,7 @@ class RegisterPhotoFragment : BaseFragment<FragmentRegisterPhotoBinding, Registe
     }
 
     private fun openDialog(){
-        fragmentAttachListener?.let { activity?.openDialogForPhoto(requireContext(), it) }
+        fragmentAttachListener?.let { openDialogFromPhoto(requireContext(), it) }
     }
 
     private fun onCropImageResult(uri: Uri?){

@@ -22,7 +22,7 @@ fun Activity.hideKeyboard(){
     service.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-fun Activity.openDialogForPhoto(context: Context, attachListener: FragmentAttachListener){
+fun openDialogFromPhoto(context: Context, attachListener: FragmentAttachListener){
     val dialog = CustomDialog(context)
     dialog.setTitle(R.string.define_photo_profile)
     dialog.addButton(R.string.photo, R.string.gallery) {
@@ -38,7 +38,7 @@ fun Activity.openDialogForPhoto(context: Context, attachListener: FragmentAttach
     dialog.show()
 }
 
-fun Activity.animationEnd(callback: () -> Unit) : AnimatorListenerAdapter{
+fun animationEnd(callback: () -> Unit) : AnimatorListenerAdapter{
     return object : AnimatorListenerAdapter(){
         override fun onAnimationEnd(animation: Animator?) {
             callback.invoke()

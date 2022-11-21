@@ -2,14 +2,12 @@ package co.tiagoaguiar.course.instagram.profile.view
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.net.Uri
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import co.tiagoaguiar.course.instagram.R
@@ -17,12 +15,10 @@ import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
 import co.tiagoaguiar.course.instagram.common.view.PostZoom
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainProfileBinding
 import co.tiagoaguiar.course.instagram.main.AttachListenerLogout
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
-import co.tiagoaguiar.course.instagram.main.view.MainActivity
 import co.tiagoaguiar.course.instagram.profile.Profile
 import co.tiagoaguiar.course.instagram.profile.util.ProfileAdapter
 import com.bumptech.glide.Glide
@@ -40,7 +36,8 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     override lateinit var presenter: Profile.Presenter
 
     private var attachListenerPhoto: AttachListenerPhoto? = null
-    private var currentPhoto: Uri? = null
+
+    private var follow: Follow? = null
 
     private var logout: AttachListenerLogout? = null
 
@@ -78,6 +75,7 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
                         it.tag = false
 
                         presenter.followUser(uuid, false)
+
                     } else if (it.tag == false) {
                         profileIncludeProfile.profileBtnEditProfile.text =
                             getString(R.string.unfollow)
@@ -96,14 +94,6 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
     }
 
     override fun getMenu() = R.menu.menu_defaut
-
-    override fun getFragmentResult() {
-        setFragmentResultListener("cropKey") { _, bundle ->
-            val uri = bundle.getParcelable<Uri>(ImageCroppedFragment.KEY_URI)
-            currentPhoto = uri
-            currentPhoto?.let { presenter.updatePhoto(it) }
-        }
-    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
@@ -184,16 +174,6 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         adapter.notifyDataSetChanged()
     }
 
-    override fun onUpdateFailure(message: String) {
-        Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
-    }
-
-    @SuppressLint("NotifyDataSetChanged")
-    override fun onUpdateUserSuccess(image: Uri) {
-        binding?.profileIncludeProfile?.profileImgIcon?.setImageURI(image)
-        binding?.profileIncludeProfile?.profileImgAdd?.visibility = View.GONE
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     override fun onUpdatePostsSuccess(posts: List<Post>) {
         binding?.profileRecycler?.visibility = View.VISIBLE
@@ -201,10 +181,14 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         adapter.notifyDataSetChanged()
     }
 
-    override fun follow(isFollow: Boolean) {
-        if (isFollow) {
-            (requireActivity() as MainActivity).onPostCreated()
+    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_profile_grid ->
+                binding?.profileRecycler?.layoutManager = GridLayoutManager(requireContext(), 3)
+            R.id.menu_profile_videos ->
+                binding?.profileRecycler?.layoutManager = LinearLayoutManager(requireContext())
         }
+        return true
     }
 
     private fun openDialog() {
@@ -230,22 +214,20 @@ class ProfileFragment : BaseFragment<FragmentMainProfileBinding, Profile.Present
         if (context is AttachListenerLogout)
             logout = context
 
+        if (context is Follow)
+            follow = context
+
     }
 
     override fun onDestroy() {
         attachListenerPhoto = null
+        follow = null
         logout = null
         super.onDestroy()
     }
 
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.menu_profile_grid ->
-                binding?.profileRecycler?.layoutManager = GridLayoutManager(requireContext(), 3)
-            R.id.menu_profile_videos ->
-                binding?.profileRecycler?.layoutManager = LinearLayoutManager(requireContext())
-        }
-        return true
+    interface Follow{
+        fun onFollow()
     }
 
 }

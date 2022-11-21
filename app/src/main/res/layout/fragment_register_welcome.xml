@@ -28,10 +28,9 @@
 
             <TextView
                 android:id="@+id/register_text_terms"
-                style="@style/Theme.Instagram.TextViewBase"
+                style="@style/Theme.Instagram.TextViewBase.Form"
                 android:background="@color/white"
-                android:text="@string/agree_terms_policy"
-                android:textAlignment="center"/>
+                android:text="@string/agree_terms_policy" />
 
             <co.tiagoaguiar.course.instagram.common.view.LoadingButton
                 android:id="@+id/register_btn_nextInWelcome"

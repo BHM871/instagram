@@ -36,7 +36,7 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
 
     private var logout: AttachListenerLogout? = null
 
-    private val homeAdapter by lazy { HomeAdapter<Post>(onClickItemPost) }
+    private val homeAdapter by lazy { HomeAdapter<Post>() }
 
     override fun setupPresenter() {
         presenter = DependencyInjector.mainHomePresenter(this)
@@ -46,10 +46,6 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryImg?.setImageURI(Database.sessionAuth?.photoUri)
         binding?.homeContainerMyStory?.containerMyStory?.itemHomeStoryTxt?.text =
             getText(R.string.your_story)
-//        val list: MutableList<UserAuth> =
-//            Database.usersAuth.filter { it.name != Database.sessionAuth!!.name } as MutableList<UserAuth>
-//        storyAdapter.list = list
-//
         binding?.homeRecyclerStory?.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding?.homeRecyclerStory?.adapter = storyAdapter
@@ -98,61 +94,6 @@ class HomeFragment : BaseFragment<FragmentMainHomeBinding, Home.Presenter>(
         binding?.homeRecyclerFeed?.visibility = View.VISIBLE
         homeAdapter.list = posts
         homeAdapter.notifyDataSetChanged()
-    }
-
-    private val onClickItemPost: (Post, View, HashMap<String, View>) -> Unit =
-        { post: Post, viewClicked: View, views: HashMap<String, View> ->
-            val imgLike = (views["imgLike"] as ImageView)
-            val iconLike = (views["iconLike"] as ImageView)
-
-            when (viewClicked.id) {
-                R.id.item_home_img_post -> onDoubleClickItem(post, imgLike, iconLike)
-                R.id.item_home_container_img_like -> like(post, imgLike, iconLike)
-            }
-        }
-
-    private fun onDoubleClickItem(post: Post, imgLike: ImageView, iconLike: ImageView) {
-//        post.countClick++
-//        if (post.countClick == 2) {
-//            imgLike.animate().apply {
-//                duration = 250
-//                alpha(1.0f)
-//                start()
-//            }
-//
-//            iconLike.isSelected = !iconLike.isSelected
-//            presenter.liked(post, iconLike.isSelected)
-//
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                imgLike.animate().apply {
-//                    duration = 250
-//                    alpha(0f)
-//                    start()
-//                }
-//            }, 250)
-//        }
-//        Handler(Looper.getMainLooper()).postDelayed({
-//            post.countClick = 0
-//        }, 200)
-    }
-
-    private fun like(post: Post, imgLike: ImageView, iconLike: ImageView) {
-        imgLike.animate().apply {
-            duration = 250
-            alpha(1.0f)
-            start()
-        }
-
-        iconLike.isSelected = !iconLike.isSelected
-        presenter.liked(post, iconLike.isSelected)
-
-        Handler(Looper.getMainLooper()).postDelayed({
-            imgLike.animate().apply {
-                duration = 250
-                alpha(0f)
-                start()
-            }
-        }, 250)
     }
 
     override fun onAttach(context: Context) {

@@ -17,10 +17,10 @@ import co.tiagoaguiar.course.instagram.login.Login
 import co.tiagoaguiar.course.instagram.login.data.LoginFireDataSource
 import co.tiagoaguiar.course.instagram.login.data.LoginRepository
 import co.tiagoaguiar.course.instagram.login.presentation.LoginPresenter
-import co.tiagoaguiar.course.instagram.main.Main
-import co.tiagoaguiar.course.instagram.main.data.MainFakeDataSource
+import co.tiagoaguiar.course.instagram.main.data.MainFireDataSource
 import co.tiagoaguiar.course.instagram.main.data.MainRepository
 import co.tiagoaguiar.course.instagram.main.presenter.MainPresenter
+import co.tiagoaguiar.course.instagram.main.Main
 import co.tiagoaguiar.course.instagram.post.Post
 import co.tiagoaguiar.course.instagram.post.data.PostLocalDataSource
 import co.tiagoaguiar.course.instagram.post.data.PostRepository
@@ -122,7 +122,7 @@ object DependencyInjector {
     }
 
     private fun mainRepository() : MainRepository {
-        return MainRepository(MainFakeDataSource(), PostsCache, UserCache)
+        return MainRepository(MainFireDataSource())
     }
 
     fun mainPresenter(view: Main.View): Main.Presenter {

@@ -31,11 +31,4 @@ class HomeRepository(private val dataSourceFactory: HomeDataSourceFactory) {
         localDataSource.removeCache()
     }
 
-    fun like(post: Post, liked: Boolean){
-        val remoteDataSource = dataSourceFactory.createRemoteDataSource()
-        val localDataSource = dataSourceFactory.createLocalDataSource()
-        localDataSource.liked(post, liked)
-        remoteDataSource.liked(post, liked)
-    }
-
 }

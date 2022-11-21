@@ -6,10 +6,7 @@ import android.content.Context
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.view.View
-import android.view.Window
 import androidx.annotation.RequiresApi
-import androidx.annotation.StringRes
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.databinding.PostZoomBinding
 import com.bumptech.glide.Glide

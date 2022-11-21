@@ -4,6 +4,7 @@ import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.Post
 import co.tiagoaguiar.course.instagram.common.model.User
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 
@@ -29,13 +30,14 @@ class AddFireDataSource : AddDataSource {
                 imgRef.downloadUrl
                     .addOnSuccessListener { resDow ->
 
-                        FirebaseFirestore.getInstance()
+                        val meRef = FirebaseFirestore.getInstance()
                             .collection("/users")
                             .document(userUUID)
-                            .get()
+
+                            meRef.get()
                             .addOnSuccessListener { resUser ->
 
-                                val me = resUser.toObject(User::class.java)
+                                val me = resUser.toObject(User::class.java) ?: throw RuntimeException("User not found")
 
                                 val postRef = FirebaseFirestore.getInstance()
                                     .collection("/posts")
@@ -54,6 +56,8 @@ class AddFireDataSource : AddDataSource {
                                 postRef.set(post)
                                     .addOnSuccessListener { resPost ->
 
+                                        meRef.update("postCount", FieldValue.increment(1))
+
                                         FirebaseFirestore.getInstance()
                                             .collection("/feeds")
                                             .document(userUUID)
@@ -65,26 +69,25 @@ class AddFireDataSource : AddDataSource {
                                                 FirebaseFirestore.getInstance()
                                                     .collection("/followers")
                                                     .document(userUUID)
-                                                    .collection("followers")
                                                     .get()
                                                     .addOnSuccessListener { resMyFollowers ->
 
-                                                        val followers = resMyFollowers.documents
+                                                        if (resMyFollowers!!.exists()){
 
-                                                        for (follower in followers) {
+                                                            val followers = resMyFollowers.get("followers") as List<String>
 
-                                                            val followerId = follower.toObject(String::class.java) ?: throw RuntimeException("Failure converting followers")
+                                                            for (follower in followers) {
 
-                                                            FirebaseFirestore.getInstance()
-                                                                .collection("/feeds")
-                                                                .document(followerId)
-                                                                .collection("posts")
-                                                                .document(postRef.path)
-                                                                .set(post)
+                                                                FirebaseFirestore.getInstance()
+                                                                    .collection("/feeds")
+                                                                    .document(follower)
+                                                                    .collection("posts")
+                                                                    .document(postRef.path)
+                                                                    .set(post)
+                                                            }
                                                         }
 
                                                         callback.onSuccess(true)
-
                                                     }
                                                     .addOnFailureListener { exception ->
                                                         callback.onFailure(exception.message ?: "Failure add in feed")

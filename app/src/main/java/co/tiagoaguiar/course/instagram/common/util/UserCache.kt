@@ -2,7 +2,6 @@ package co.tiagoaguiar.course.instagram.common.util
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 object UserCache : Cache<Pair<User, Boolean?>> {
 

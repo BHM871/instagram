@@ -1,8 +1,8 @@
 package co.tiagoaguiar.course.instagram.login.data
 
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
-import com.google.firebase.auth.FirebaseAuth
 import co.tiagoaguiar.course.instagram.common.model.User
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginFireDataSource : LoginDataSource {
 

@@ -1,7 +1,5 @@
 package co.tiagoaguiar.course.instagram.common.model
 
-import java.util.*
-
 object Database {
 
     val usersAuth = mutableListOf<UserAuth>()

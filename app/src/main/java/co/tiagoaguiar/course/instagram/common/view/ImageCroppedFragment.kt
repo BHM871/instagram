@@ -1,6 +1,5 @@
 package co.tiagoaguiar.course.instagram.common.view
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
@@ -9,8 +8,6 @@ import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
-import androidx.appcompat.app.ActionBar
-import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
@@ -19,8 +16,6 @@ import co.tiagoaguiar.course.instagram.databinding.FragmentImageCroppedBinding
 import co.tiagoaguiar.course.instagram.main.view.MainActivity
 import com.google.android.material.appbar.AppBarLayout
 import java.io.File
-import java.text.AttributedCharacterIterator
-import java.util.jar.Attributes
 
 class ImageCroppedFragment : Fragment(R.layout.fragment_image_cropped) {
 

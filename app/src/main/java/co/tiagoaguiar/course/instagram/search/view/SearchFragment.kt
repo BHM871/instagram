@@ -15,7 +15,6 @@ import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.BaseFragment
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainSearchBinding
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 import co.tiagoaguiar.course.instagram.search.Search

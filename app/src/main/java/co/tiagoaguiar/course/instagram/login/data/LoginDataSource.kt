@@ -2,7 +2,6 @@ package co.tiagoaguiar.course.instagram.login.data
 
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 interface LoginDataSource {
 

@@ -1,6 +1,5 @@
 package co.tiagoaguiar.course.instagram.post.util
 
-import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.util.Size
@@ -9,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.course.instagram.R
 

@@ -3,7 +3,6 @@ package co.tiagoaguiar.course.instagram.register.data
 import android.net.Uri
 import co.tiagoaguiar.course.instagram.common.base.RequestCallback
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 
 interface RegisterDataSource {
 

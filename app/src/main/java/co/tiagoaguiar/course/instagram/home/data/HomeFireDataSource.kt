@@ -35,7 +35,4 @@ class HomeFireDataSource : HomeDataSource {
             }
     }
 
-    override fun liked(post: Post, liked: Boolean) {
-        //
-    }
 }

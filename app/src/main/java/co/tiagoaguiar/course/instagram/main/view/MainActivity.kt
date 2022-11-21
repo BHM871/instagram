@@ -9,7 +9,6 @@ import android.provider.MediaStore
 import android.util.Log
 import android.view.MenuItem
 import android.view.WindowInsetsController
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -18,8 +17,7 @@ import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import co.tiagoaguiar.course.instagram.R
 import co.tiagoaguiar.course.instagram.common.base.DependencyInjector
-import co.tiagoaguiar.course.instagram.post.view.AddFragment
-import co.tiagoaguiar.course.instagram.common.extension.openDialogForPhoto
+import co.tiagoaguiar.course.instagram.common.extension.openDialogFromPhoto
 import co.tiagoaguiar.course.instagram.common.extension.replaceFragment
 import co.tiagoaguiar.course.instagram.common.view.ImageCroppedFragment
 import co.tiagoaguiar.course.instagram.databinding.ActivityMainBinding
@@ -28,6 +26,7 @@ import co.tiagoaguiar.course.instagram.login.view.LoginActivity
 import co.tiagoaguiar.course.instagram.main.AttachListenerLogout
 import co.tiagoaguiar.course.instagram.main.AttachListenerPhoto
 import co.tiagoaguiar.course.instagram.main.Main
+import co.tiagoaguiar.course.instagram.post.view.AddFragment
 import co.tiagoaguiar.course.instagram.profile.view.ProfileFragment
 import co.tiagoaguiar.course.instagram.search.view.SearchFragment
 import com.google.android.material.appbar.AppBarLayout
@@ -38,7 +37,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-    Main.View, AttachListenerPhoto, AttachListenerLogout, AddFragment.AddListener, SearchFragment.SearchListener {
+    Main.View, AttachListenerPhoto, AttachListenerLogout, AddFragment.AddListener,
+    SearchFragment.SearchListener, ProfileFragment.Follow {
 
     override lateinit var presenter: Main.Presenter
 
@@ -121,17 +121,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         binding.mainAppbar.layoutParams = coordinatorParams
     }
 
-    override fun isLogout(logout: Boolean) {
-        if (logout){
-            profileFragment.presenter.clear()
-            homeFragment.presenter.clear()
-            startActivity(Intent(this, LoginActivity::class.java))
-            finish()
-        } else {
-            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-        }
-    }
-
     override fun goToGalleryScreen() {
         getContent.launch("image/*")
     }
@@ -190,7 +179,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun openDialogForPhoto() {
-        openDialogForPhoto(this, this)
+        openDialogFromPhoto(this, this)
     }
 
     override fun goToFragmentCamera() {
@@ -202,17 +191,35 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     override fun onPostCreated() {
+        binding.mainBottomNav.selectedItemId = R.id.menu_bottom_home
         homeFragment.presenter.clear()
 
-        if(supportFragmentManager.findFragmentByTag(profileFragment.javaClass.simpleName) != null) {
+        if (supportFragmentManager.findFragmentByTag(profileFragment.javaClass.simpleName) != null) {
             profileFragment.presenter.clear()
         }
+    }
 
-        binding.mainBottomNav.selectedItemId = R.id.menu_bottom_home
+    override fun onFollow() {
+        profileFragment.presenter.clear()
+        if (supportFragmentManager.findFragmentByTag(homeFragment.tag) != null) {
+            homeFragment.presenter.clear()
+        }
     }
 
     override fun goToLoginLogout() {
         presenter.logout()
+    }
+
+    override fun success() {
+        if (supportFragmentManager.findFragmentByTag(homeFragment.tag) != null) {
+            homeFragment.presenter.clear()
+        }
+        if (supportFragmentManager.findFragmentByTag(profileFragment.tag) != null) {
+            profileFragment.presenter.clear()
+        }
+
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
     }
 
     override fun goToProfile(uuid: String) {
@@ -223,7 +230,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container_main, fragment, fragment.javaClass.simpleName + "detail")
+            replace(
+                R.id.fragment_container_main,
+                fragment,
+                fragment.javaClass.simpleName + "detail"
+            )
             addToBackStack(null)
             commit()
         }

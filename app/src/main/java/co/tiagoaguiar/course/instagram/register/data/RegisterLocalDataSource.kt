@@ -1,9 +1,7 @@
 package co.tiagoaguiar.course.instagram.register.data
 
 import co.tiagoaguiar.course.instagram.common.base.Cache
-import co.tiagoaguiar.course.instagram.common.model.Database
 import co.tiagoaguiar.course.instagram.common.model.User
-import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import com.google.firebase.auth.FirebaseAuth
 
 class RegisterLocalDataSource(

@@ -12,9 +12,7 @@ import co.tiagoaguiar.course.instagram.common.model.UserAuth
 import com.bumptech.glide.Glide
 import de.hdodenhof.circleimageview.CircleImageView
 
-class HomeAdapter<T>(
-    private val listenerPost: ((Post, View, HashMap<String, View>) -> Unit)? = null
-) : RecyclerView.Adapter<HomeAdapter<T>.HomeHolder>() {
+class HomeAdapter<T>() : RecyclerView.Adapter<HomeAdapter<T>.HomeHolder>() {
 
     var list: List<T> = mutableListOf()
 
@@ -54,8 +52,6 @@ class HomeAdapter<T>(
             Glide.with(context).load(post.photoUrl).into(imgPost)
             Glide.with(context).load(post.publisher?.photoUrl).into(imgProfile)
 
-            //iconLike.isSelected = post.like
-
             txtUser.text = post.publisher?.username
             txtDesc.text = post.description
             if (post.description != "")
@@ -64,13 +60,6 @@ class HomeAdapter<T>(
             val listViews = hashMapOf<String, View>()
             listViews["imgLike"] = imgLike
             listViews["iconLike"] = iconLike
-
-            imgPost.setOnClickListener {
-                listenerPost?.invoke(post, it, listViews)
-            }
-            iconLike.setOnClickListener {
-                listenerPost?.invoke(post, it, listViews)
-            }
         }
 
         fun bindStory(user: T) = with(itemView) {

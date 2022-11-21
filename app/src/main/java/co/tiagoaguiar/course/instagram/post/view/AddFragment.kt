@@ -17,9 +17,9 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.viewpager2.widget.ViewPager2
 import co.tiagoaguiar.course.instagram.R
-import co.tiagoaguiar.course.instagram.post.util.AddViewPageAdapter
 import co.tiagoaguiar.course.instagram.add.view.AddActivity
 import co.tiagoaguiar.course.instagram.databinding.FragmentMainAddBinding
+import co.tiagoaguiar.course.instagram.post.util.AddViewPageAdapter
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 

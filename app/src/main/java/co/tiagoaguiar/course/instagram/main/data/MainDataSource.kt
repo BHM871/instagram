@@ -7,6 +7,4 @@ interface MainDataSource {
 
     fun logout(callback: RequestCallback<Boolean>) {throw UnsupportedOperationException()}
 
-    fun <T> removeCache(cache: Cache<T>) {throw UnsupportedOperationException()}
-
 }

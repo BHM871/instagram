@@ -50,27 +50,10 @@ class ProfilePresenter(
         })
     }
 
-    override fun updatePhoto(photoUri: Uri) {
-        view?.showProgress(true)
-        repository.updatePhoto(photoUri, object : RequestCallback<Uri> {
-            override fun onSuccess(data: Uri) {
-                view?.onUpdateUserSuccess(data)
-            }
-
-            override fun onFailure(message: String) {
-                view?.onUpdateFailure(message)
-            }
-
-            override fun onComplete() {
-                view?.showProgress(false)
-            }
-        })
-    }
-
     override fun followUser(uuid: String?, follow: Boolean) {
         repository.followUser(uuid, follow, object : RequestCallback<Boolean> {
             override fun onSuccess(data: Boolean) {
-                view?.follow(data)
+                fetchUserProfile(uuid)
             }
 
             override fun onFailure(message: String) { }

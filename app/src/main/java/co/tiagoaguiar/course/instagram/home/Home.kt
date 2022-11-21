@@ -8,7 +8,6 @@ interface Home {
 
     interface Presenter : BasePresenter{
         fun fetchFeed()
-        fun liked(post: Post, liked: Boolean)
         fun clear()
     }
 
