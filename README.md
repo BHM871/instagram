@@ -19,7 +19,7 @@
 
 <!--ts-->
   * [Common](#common)
-  * [Activitys Folders](#activitys)
+  * [Activitys Folders](#activitys-folders)
 <!--te-->
 
 <article id="common">
@@ -42,6 +42,9 @@
       
 </article>
 
-
+<article id="activitys-folders">
+  <h2 align="center">Activitys Folders</h2>
+  <p>All folders except the Common folder are in accordance with the <a href="https://www.actionlabs.com.br/insights/entenda-o-que-e-mvp-e-para-que-serve-essa-estrategia/">MVP</a> + the interfaces used during folder flow.</p>
+</article>
 
 <h3 align="center">:warning: TODO: README em processo. :warning:</h3>
