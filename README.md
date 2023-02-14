@@ -19,22 +19,29 @@
 
 <!--ts-->
   * [Common](#common)
+  * [Activitys Folders](#activitys)
 <!--te-->
 
 <article id="common">
   <h2 align="center">Common</h2>
   
-  - ### `base`: 
-      This folder contains all the generic classes and interfaces used in the application, such as Callback, Cache with default functions, the basis for Fragment, etc.
-  - ### `extension`:
+  - ### [`base`](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/common/base): 
+      This folder contains all the generic classes and interfaces used in the application, such as Callback, my Dependency Injector, Cache with default functions, the basis for Fragment, etc.
+  
+  - ### [`extension`](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/common/extension):
       This folder contains a file that contains common functions for the application, which can be accessed from anywhere.
-  - ### `model`:
+  
+  - ### [`model`](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/common/model):
       This folder contains all the classes of data used in the application and the object that functions as a databasetemporary local data.
-  - ### `util`:
+  
+  - ### [`util`](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/common/util):
       This folder contains classes with utilities for the entire application.
-  - ### `view`:
+  
+  - ### [`view`](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/common/view):
       This folder contains preview screens that can be called from anywhere in the application and custom visualization element classes.
       
 </article>
+
+
 
 <h3 align="center">:warning: TODO: README em processo. :warning:</h3>
