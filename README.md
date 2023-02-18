@@ -149,8 +149,8 @@
     </section>
     <section id="main-folder">
         <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main">Main Folder</a></h3>
-        <p>
-            This folder is intended to manage most of the shards and general functions of the application.
+        <p align="center">
+            This folder is intended to manage most of the Fragments and general functions of the application.
         </p>
         <hr>
         <section id="main-interface">
@@ -178,6 +178,15 @@
                 <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/presenter">presenter</a></h3>
                 <p>
                     - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/presenter/MainPresenter.kt">MainPresenter</a> aims to call the repository to log out and notify the view whether it succeeded or not
+                </p>
+            </div>
+            <div id="main-view">
+                <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/view">view</a></h3>
+                <p>
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/view/MainActivity.kt">MainActivity</a> is intended to manage most fragments, for example, that Fragment is displayed.
+                </p>
+                <p>
+                    - When Fragment performs a function that interferes with any other fragment, such as sharing an image that you need to add to the feed, a function that performs whatever is necessary to complete the stream is triggered in MainActivity.
                 </p>
             </div>
         </section>
