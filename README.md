@@ -57,10 +57,10 @@
             <div id="login-model">
                 <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data">data</a></h3>
                 <p>
-                    - <b>This layer in the MVP architecture contains two classes and an interface.</b>
+                    - <b>This layer in the MVP architecture contains two classes and one interface.</b>
                 </p>
                 <p>
-                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginDataSource.kt">LoginDataSource</a> is the interface that defines rules for communication with the database, which is defined and executed by the LoginFireDataSource class.
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginDataSource.kt">LoginDataSource</a> is the interface that defines rules for communication with the database, which is instantiated and executed by the LoginFireDataSource class.
                 </p>
                 <p>
                     - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginFireDataSource.kt">LoginFireDataSource</a> class is responsible for verifying that the email and password exist in the database and using Callback to return the response. Utilize a Google Firebase librarie.
@@ -113,7 +113,7 @@
             <div id="register-presenter">
                 <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/register/presenter">presentation</a></h3>
                 <p>
-                    <b>- This layer contains three presenter, one for each fragment that needs something that is not the responsibility of the view.</b>
+                    <b>- This layer contains three presenter, one for each fragment that needs do something in database.</b>
                 <p>
                     - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/register/presenter/RegisterEmailPresenter.kt">RegisterEmailPresenter</a> which is responsible for validating email arriving from the View, calls the Model layer and defines the function that will call in the View. 
                 </p>
@@ -150,22 +150,22 @@
     <section id="main-folder">
         <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main">Main Folder</a></h3>
         <p>
-            This folder aims to manage most of the fragments and the overall functions of the application.
+            This folder is intended to manage most of the shards and general functions of the application.
         </p>
         <hr>
         <section id="main-interface">
             <p>
-                This folder contains three interfaces. One, Main, defines the functions of the MainActivity class, the others are Listeners that define functions that are instantiated in the Main Activity and are called by the fragments that are managed. The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerLogout.kt">AttachListenerLogout</a> defines function of log out and the <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerPhoto.kt">AttachListenerPhoto</a> defines all fuctions related that the handling of Photo.
+                - This folder contains three interfaces. One, Main, defines the functions of the MainActivity class, the others are Listeners that define functions that are instantiated in the Main Activity and are called by the fragments that are managed. AttachListenerLogout defines the logout function and AttachListenerPhoto defines all related functions that photo processing.
             </p>
         </section>
         <section id="main-mvp">
             <div id="main-model">
                 <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data">data</a></h3>
                 <p>
-                    - <b>This layer in the MVP architecture contains two classes and an interface.</b>
+                    - <b>This layer in the MVP architecture contains two classes and one interface.</b>
                 </p>
                 <p>
-                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainDataSource.kt">MainDataSource</a> is the interface that defines rules for communication with the database, which is defined and executed by the MainFireDataSource class.
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainDataSource.kt">MainDataSource</a> is the interface that defines rules for communication with the database, which is instantiated and executed by the MainFireDataSource class.
                 </p>
                 <p>
                     - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainFireDataSource.kt">MainFireDataSource</a> class has only one goal, to log out with a Google Firebase library.
@@ -174,8 +174,14 @@
                     - The Repository classes used in all folders in the project, aim to define the class that will perform the called function. In this case there is only one option the <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainRepository.kt">MainRepository</a>.
                 </p>
             </div>
+            <div id="main-presenter">
+                <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/presenter">presenter</a></h3>
+                <p>
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/presenter/MainPresenter.kt">MainPresenter</a> aims to call the repository to log out and notify the view whether it succeeded or not
+                </p>
+            </div>
         </section>
     </section>
 </article>
 
-<h3 align="center">:warning: TODO: README em processo. :warning:</h3>
+<h3 align="center">:warning: TODO: README em desenvolvimento. :warning:</h3>
