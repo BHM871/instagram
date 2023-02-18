@@ -149,13 +149,16 @@
     </section>
     <section id="main-folder">
         <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main">Main Folder</a></h3>
-        <p align="center">
-            This folder is intended to manage most of the Fragments and general functions of the application.
+        <p>
+            <b>This folder is intended to manage most of the Fragments and general functions of the application.</b>
         </p>
         <hr>
         <section id="main-interface">
             <p>
-                - This folder contains three interfaces. One, Main, defines the functions of the MainActivity class, the others are Listeners that define functions that are instantiated in the Main Activity and are called by the fragments that are managed. AttachListenerLogout defines the logout function and AttachListenerPhoto defines all related functions that photo processing.
+                - This folder contains three interfaces. One, Main, defines the functions of the MainActivity class, the others are Listeners that define functions that are instantiated in the Main Activity and are called by the fragments that are managed. 
+            </p>
+            <p>
+                - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerLogout.kt">AttachListenerLogout</a> defines the logout function and <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerPhoto.kt">AttachListenerPhoto</a> defines all related functions that photo processing.
             </p>
         </section>
         <section id="main-mvp">
