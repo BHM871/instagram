@@ -45,11 +45,8 @@
 <article id="activitys-folders">
     <h2 align="center">Activitys Folders</h2>
     <p>All folders except the Common folder are in accordance with the <a href="https://www.actionlabs.com.br/insights/entenda-o-que-e-mvp-e-para-que-serve-essa-estrategia/">MVP</a> + the interfaces used during folder flow.</p>
-
     <section id="login-folder">
-        
-- ### [Login Folder](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login)
-        
+        <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login">Login Folder</a></h3>
         <hr>
         <section id="login-interface">
             <p>
@@ -63,7 +60,7 @@
                     - <b>This layer in the MVP architecture contains two classes and an interface.</b>
                 </p>
                 <p>
-                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginDataSource.kt">LoginDataSource</a> is the interface that defines rules for communication with the database, which is executed by the LoginFireDataSource class.
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginDataSource.kt">LoginDataSource</a> is the interface that defines rules for communication with the database, which is defined and executed by the LoginFireDataSource class.
                 </p>
                 <p>
                     - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/login/data/LoginFireDataSource.kt">LoginFireDataSource</a> class is responsible for verifying that the email and password exist in the database and using Callback to return the response. Utilize a Google Firebase librarie.
@@ -87,9 +84,7 @@
         </section>
     </section>
     <section id="register-folder">
-        
-- ### [Register Folder](https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/register)
-        
+        <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/register">Register Folder</a></h3>
         <hr>
         <section id="register-interface">
             <p>
@@ -148,6 +143,35 @@
                 </p>
                 <p>
                     - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/register/view/RegisterWelcomeFragment.kt">RegisterWelcomeFragment</a> aims to manage the functionality of the view.
+                </p>
+            </div>
+        </section>
+    </section>
+    <section id="main-folder">
+        <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main">Main Folder</a></h3>
+        <p>
+            This folder aims to manage most of the fragments and the overall functions of the application.
+        </p>
+        <hr>
+        <section id="main-interface">
+            <p>
+                This folder contains three interfaces. One, Main, defines the functions of the MainActivity class, the others are Listeners that define functions that are instantiated in the Main Activity and are called by the fragments that are managed. The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerLogout.kt">AttachListenerLogout</a> defines function of log out and the <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/AttachListenerPhoto.kt">AttachListenerPhoto</a> defines all fuctions related that the handling of Photo.
+            </p>
+        </section>
+        <section id="main-mvp">
+            <div id="main-model">
+                <h3><a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data">data</a></h3>
+                <p>
+                    - <b>This layer in the MVP architecture contains two classes and an interface.</b>
+                </p>
+                <p>
+                    - <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainDataSource.kt">MainDataSource</a> is the interface that defines rules for communication with the database, which is defined and executed by the MainFireDataSource class.
+                </p>
+                <p>
+                    - The <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainFireDataSource.kt">MainFireDataSource</a> class has only one goal, to log out with a Google Firebase library.
+                </p>
+                <p>
+                    - The Repository classes used in all folders in the project, aim to define the class that will perform the called function. In this case there is only one option the <a href="https://github.com/BHM871/Instagram/tree/master/app/src/main/java/co/tiagoaguiar/course/instagram/main/data/MainRepository.kt">MainRepository</a>.
                 </p>
             </div>
         </section>
